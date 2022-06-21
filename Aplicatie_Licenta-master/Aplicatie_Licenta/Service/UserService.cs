@@ -1,5 +1,4 @@
 ﻿using Aplicatie_Licenta.Models;
-using Aplicatie_Licenta.Service.Interface;
 using Aplicatie_Licenta.Service.Schemas.User;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -9,16 +8,11 @@ using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.Service
 {
-    public class UserService : IUserService
+    public static class UserService
     {
-        // singleton instace
-        private readonly static UserService _instance = new();
-        public User? CurrentUser { get; set; }
-        public static UserService Instance => _instance;
-        private UserService() { }
+        public static User? CurrentUser { get; set; }
 
-
-        public async Task DeleteUser()
+        public static async Task DeleteUser()
         {
             using HttpClient client = new();
 
@@ -27,7 +21,7 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.DeleteAsync("http://localhost:8000/api/users");
         }
 
-        public async Task<User> GetUserByUsername(string username)
+        public static async Task<User> GetUserByUsername(string username)
         {
             using HttpClient client = new();
 
@@ -38,7 +32,7 @@ namespace Aplicatie_Licenta.Service
             return ToUser(userOut);
         }
 
-        public async Task UpdateUser(User user)
+        public static async Task UpdateUser(User user)
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);

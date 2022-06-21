@@ -33,7 +33,7 @@ namespace Aplicatie_Licenta.ViewModels
         private async void LoadPosts()
         {
             IsLoading = true;
-            await PostService.Instance.GetAllPosts().ContinueWith(t =>
+            await PostService.GetAllPosts().ContinueWith(t =>
             {
                 // move to UI thread
                 App.Current.Dispatcher.Invoke((Action)delegate

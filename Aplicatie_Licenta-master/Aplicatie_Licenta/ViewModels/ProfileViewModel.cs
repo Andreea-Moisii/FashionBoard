@@ -63,26 +63,27 @@ namespace Aplicatie_Licenta.ViewModels
 
             return profileViewModel;
         }
-        
+
         public async void LoadProfile(string username)
         {
             _viewablePosts.Clear();
-            if (UserService.Instance?.CurrentUser?.Username == username)
+            if (UserService.CurrentUser?.Username == username)
             {
-                _user = UserService.Instance.CurrentUser;
+                _user = UserService.CurrentUser;
                 _viewablePosts.Clear();
             }
             else
             {
-                await UserService.Instance.GetUserByUsername(username).ContinueWith(
+                await UserService.GetUserByUsername(username).ContinueWith(
                     (task) =>
                     {
                         _user = task.Result;
                         _viewablePosts.Clear();
                     });
 
-                await 
+
             }
+        }
 
     }
 }

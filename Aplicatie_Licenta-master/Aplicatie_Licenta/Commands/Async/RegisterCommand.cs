@@ -20,7 +20,7 @@ namespace Aplicatie_Licenta.Commands.Async
         {
             if (!_logInViewModel.CheckRegister()) return;
 
-            await AuthService.Instance.Register(_logInViewModel.RegisterUsername, _logInViewModel.RegisterPassword, _logInViewModel.RegisterEmail)
+            await AuthService.Register(_logInViewModel.RegisterUsername, _logInViewModel.RegisterPassword, _logInViewModel.RegisterEmail)
                 .ContinueWith(t =>
                 {
                     if (t.IsCompletedSuccessfully)

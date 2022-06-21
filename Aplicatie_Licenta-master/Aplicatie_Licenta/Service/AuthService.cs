@@ -1,5 +1,4 @@
 ﻿using Aplicatie_Licenta.Models.Schemas;
-using Aplicatie_Licenta.Service.Interface;
 using Aplicatie_Licenta.Service.Schemas.User;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -8,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.Service
 {
-    public class AuthService : IAuthService
+    public static class AuthService
     {
-        // singleton instace
-        private readonly static AuthService _instance = new();
-        public static AuthService Instance { get { return _instance; } }
-        private AuthService() { }
+        // login token
+        public static string? LoginToken { get; set; }
 
-        public override async Task<bool> Login(string username, string password)
+        public static async Task<bool> Login(string username, string password)
         {
             using HttpClient client = new();
             var user = new UserLogin
@@ -36,11 +33,11 @@ namespace Aplicatie_Licenta.Service
 
             if (request.IsSuccessStatusCode)
             {
-                var r = await UserService.Instance.GetUserByUsername(username).ContinueWith(t =>
+                var r = await UserService.GetUserByUsername(username).ContinueWith(t =>
                {
                    if (t.Result != null)
                    {
-                       UserService.Instance.CurrentUser = t.Result;
+                       UserService.CurrentUser = t.Result;
                        return true;
                    }
                    else
@@ -55,7 +52,7 @@ namespace Aplicatie_Licenta.Service
                 return false;
             }
         }
-        public override async Task Register(string username, string password, string email)
+        public static async Task Register(string username, string password, string email)
         {
             using HttpClient client = new();
             var user = new UserRegister

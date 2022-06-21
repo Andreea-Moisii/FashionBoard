@@ -1,5 +1,4 @@
 ﻿using Aplicatie_Licenta.Service;
-using Aplicatie_Licenta.Service.Interface;
 using Aplicatie_Licenta.Stores;
 using Aplicatie_Licenta.ViewModels;
 using System;
@@ -18,7 +17,7 @@ namespace Aplicatie_Licenta.Commands
 
         public override void Execute(object? parameter)
         {
-            if (IAuthService.LoginToken != null)
+            if (AuthService.LoginToken != null)
             {
                 _navigationStore.CurrentViewModel = _createViewModel();
             }

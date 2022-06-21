@@ -20,7 +20,7 @@ namespace Aplicatie_Licenta.Commands.Async
         public override async Task ExecuteAsync(object? parameter)
         {
             if (!_logInViewModel.CheckLogin()) return;
-            await AuthService.Instance.Login(_logInViewModel.LoginUsername, _logInViewModel.LoginPassword).ContinueWith(task =>
+            await AuthService.Login(_logInViewModel.LoginUsername, _logInViewModel.LoginPassword).ContinueWith(task =>
             {
                 if (task.IsCompleted)
                 {

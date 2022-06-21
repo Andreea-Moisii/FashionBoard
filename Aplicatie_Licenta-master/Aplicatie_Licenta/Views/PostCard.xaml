@@ -39,6 +39,7 @@
                     FontWeight="Bold"
                     
                     Content="{Binding Username, FallbackValue='Username'}"
+                    
                     />
             </StackPanel>
 
