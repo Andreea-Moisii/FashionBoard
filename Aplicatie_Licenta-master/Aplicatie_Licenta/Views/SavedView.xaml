@@ -88,30 +88,39 @@
                 VerticalAlignment="Center"
                 
                 BorderThickness="1.5"
-                Background="#3D404B"
+                Background="#181823"
                 Foreground="#B1B2B8"
                 />
         </Grid>
 
-        <!--resizeble main panel-->
-        <hc:TransitioningContentControl
-            
-             Grid.Row="1">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding ViewablePosts}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <views:PostCard/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
-        </hc:TransitioningContentControl>
+        <!--loadin circle-->
+        <hc:LoadingCircle 
+            Visibility="{Binding IsLoading, Converter={StaticResource cBoolToVisibility}}"
+            Grid.Row="1"
+            Width="50"
+            Height="50"/>
+
+        <!--profile posts-->
+        <Grid Grid.Row="1"
+              Visibility="{Binding IsLoading, Converter={StaticResource cInverseBoolToVisibility}}">
+            <!--resizeble main panel-->
+            <hc:TransitioningContentControl>
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding ViewablePosts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <views:PostCard/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </hc:TransitioningContentControl>
+        </Grid>
 
     </Grid>
 </UserControl>

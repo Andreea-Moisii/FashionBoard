@@ -16,6 +16,7 @@
         <Grid.ColumnDefinitions >
             <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
        
 
@@ -74,7 +75,7 @@
 
 
         <!--the content of the window-->
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.ColumnSpan="2">
             <Grid.Resources>
                 <DataTemplate DataType="{x:Type vms:HomeViewModel}">
                     <views:HomeView/>
@@ -104,6 +105,11 @@
             <ContentControl Content ="{Binding CurrentViewModel}"/>
         </Grid>
         
-
+        <!--popup meseges container-->
+        <Grid Grid.Column="2">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right">
+                <StackPanel hc:Growl.Token="Notff" VerticalAlignment="Top" Margin="0"/>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>

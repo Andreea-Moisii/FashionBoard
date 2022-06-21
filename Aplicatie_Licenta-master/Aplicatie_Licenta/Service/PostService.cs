@@ -97,7 +97,19 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{id_post}/images", content);
         }
 
-        public static async Task SavePost(int id_post)
+        public static async Task<IEnumerable<Post>> GetAllSavedPost()
+        {
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
+
+            HttpResponseMessage response = await client.GetAsync($"http://localhost:8000/api/saves");
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
+            return posts.Select(p => ToPost(p));
+        }
+
+        public static async Task AddSave(int id_post)
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);

@@ -56,21 +56,21 @@ namespace Aplicatie_Licenta.ViewModels
             BackCommand = new NavigateCommand(() => fromViewModel != null ? fromViewModel : new HomeViewModel(navigationStore),navigationStore);
         }
 
-        public ViewModelBase LoadProfileViewModel(string username, NavigationStore navigationStore, ViewModelBase? fromViewModel = null)
+        public static ViewModelBase LoadProfileViewModel(string username, NavigationStore navigationStore, ViewModelBase? fromViewModel = null)
         {
             var profileViewModel = new ProfileViewModel(navigationStore, fromViewModel);
-            profileViewModel.LoadProfile(username);
+            profileViewModel.LoadProfile(username, navigationStore);
 
             return profileViewModel;
         }
 
-        public async void LoadProfile(string username)
+        public async void LoadProfile(string username, NavigationStore navigation)
         {
+            IsLoading = true;
             _viewablePosts.Clear();
             if (UserService.CurrentUser?.Username == username)
             {
                 _user = UserService.CurrentUser;
-                _viewablePosts.Clear();
             }
             else
             {
@@ -78,11 +78,22 @@ namespace Aplicatie_Licenta.ViewModels
                     (task) =>
                     {
                         _user = task.Result;
-                        _viewablePosts.Clear();
                     });
-
-
             }
+
+            await PostService.GetAllPostsForUser(username).ContinueWith(
+            (task) =>
+            {
+                // move to UI thread
+                App.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    foreach (var post in task.Result)
+                    {
+                        _viewablePosts.Add(new PostCardViewModel(navigation, post, this));
+                    }
+                    IsLoading = false;
+                });
+            });
         }
 
     }

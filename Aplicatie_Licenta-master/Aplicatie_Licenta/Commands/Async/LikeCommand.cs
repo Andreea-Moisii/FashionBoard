@@ -1,8 +1,10 @@
-﻿using Aplicatie_Licenta.ViewModels;
+﻿using Aplicatie_Licenta.Service;
+using Aplicatie_Licenta.ViewModels;
+using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.Commands
 {
-    public class LikeCommand : CommandBase
+    public class LikeCommand : AsyncCommandBase
     {
         private readonly PostViewModelBase _postViewModel;
 
@@ -10,10 +12,19 @@ namespace Aplicatie_Licenta.Commands
         {
             _postViewModel = postViewModel;
         }
-        public override void Execute(object? parameter)
+
+        public override async Task ExecuteAsync(object? parameter)
         {
-            if (_postViewModel.HasLike) _postViewModel.Dislike();
-            else _postViewModel.Like();
+            if (_postViewModel.HasLike)
+            {
+                _postViewModel.Dislike();
+                await PostService.DeleteSave(_postViewModel.Id_Post);
+            }
+            else
+            {
+                _postViewModel.Like();
+                await PostService.AddSave(_postViewModel.Id_Post);
+            }                
         }
     }
 }

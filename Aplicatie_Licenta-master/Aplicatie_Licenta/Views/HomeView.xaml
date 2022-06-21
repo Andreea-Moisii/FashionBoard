@@ -88,7 +88,7 @@
                 VerticalAlignment="Center"
                 
                 BorderThickness="1.5"
-                Background="#3D404B"
+                Background="#181823"
                 Foreground="#B1B2B8"
                 />
         </Grid>

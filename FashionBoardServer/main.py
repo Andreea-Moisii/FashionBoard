@@ -325,7 +325,7 @@ def get_saves(user_id: int = Depends(auth_handler.auth_wrapper), db: Session = D
         images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
         new_post.images = [image.url for image in images]
 
-        new_post.saved = False
+        new_post.saved = True
 
         return_posts.append(new_post)
 

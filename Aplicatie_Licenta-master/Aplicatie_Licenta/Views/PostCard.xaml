@@ -10,18 +10,32 @@
         Margin="10"
         Width="300" 
         Height="395" 
-        Background="#2A2C3E" 
-        CornerRadius="15">
+        CornerRadius="15"
+        BorderThickness="1"
+        BorderBrush="#7F0067A0">
+        <Border.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF171C2D"/>
+                <GradientStop Color="#FF1E202C" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
 
         <StackPanel Orientation="Vertical">
 
             <!--imagine profill + nume-->
-            <StackPanel 
-                Orientation="Horizontal"
+            <Grid 
                 Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="45"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+                
+                
                 <Border 
+                    Grid.Column="0"
                     x:Name="profilePictureBorder"
-                    Width="45"
+                    Width="45" 
                     Height="45"
                     CornerRadius="25">
                     <Border.Background>
@@ -29,19 +43,59 @@
                             ImageSource="{Binding ProfilePictureUrl, FallbackValue='https://data.whicdn.com/images/353151432/original.jpg'}"/>
                     </Border.Background>
                 </Border>
-                <Label
+                
+                <Button
+                    Grid.Column="1"
+                    
+                    HorizontalAlignment="Left"
                     Width="auto"
-                    Background="#2A2C3E"
+                    Background="Transparent"
                     Foreground="#B1B2B8"
                     BorderThickness="0"
                                     
-                    FontSize="15"
+                    FontSize="20"
                     FontWeight="Bold"
+                    Padding="0"
+                    Margin="20 0 0 0"
                     
-                    Content="{Binding Username, FallbackValue='Username'}"
-                    
+                    Content="{Binding Username, FallbackValue='USERNAME'}"
+                    Command="{Binding ViewProfileCommand}"
                     />
-            </StackPanel>
+
+                <Grid Grid.Column="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!--edit button-->
+                    <Button
+                        Grid.Row="0"
+                        Height="20"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource sTransparentButton}"
+                        Command="{Binding EditCommand}"
+                        Visibility="{Binding IsOwner, Converter={StaticResource cBoolToVisibility}}">
+                        <Image
+                            Stretch="Fill"
+                            Source="{StaticResource ic_edit}"/>
+                    </Button>
+
+                    <!--delete button-->
+                    <Button
+                        Grid.Row="1"
+                        Height="20"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource sTransparentButton}"
+                        Command="{Binding DeleteComand}"
+                        Visibility="{Binding IsOwner, Converter={StaticResource cBoolToVisibility}}">
+                        <Image
+                            Stretch="Fill"
+                            Source="{StaticResource ic_trash}"/>
+                    </Button>
+
+                </Grid>
+            </Grid>
 
             <!--imaginea principala a postarii-->
             <Border
@@ -96,9 +150,15 @@
                             Height="auto"
                             HorizontalAlignment="Center">
                             <Image 
-                                Width="25"
-                                Height="25"
-                                Source="{Binding HearthIcon}"/>
+                            Width="28" Height="28"
+                            Source="{StaticResource ic_heart_full}"
+                            Visibility="{Binding HasLike, Converter={StaticResource cBoolToVisibility}}"/>
+
+                            <Image 
+                            Width="28" Height="28"
+                            Source="{StaticResource ic_heart_empty}"
+                            Visibility="{Binding HasLike,Converter={StaticResource cInverseBoolToVisibility}}"/>
+
                             <Label
                                 Name="numberLikesLabel"
                                 Background="#FF6271"
@@ -109,7 +169,7 @@
                                 BorderThickness="0"
                                 Margin="0 0 0 2"
                                 
-                                Content="{Binding NumberLikes}"
+                                Content="{Binding NumberLikes, FallbackValue='0'}"
                                 />
                         </StackPanel>
                     </Button>

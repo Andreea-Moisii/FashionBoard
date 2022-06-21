@@ -55,7 +55,6 @@
             <!--username input-->
             <hc:TextBox
                 hc:InfoElement.Title="Username"
-                hc:InfoElement.Placeholder="Username"
                 Text="{Binding LoginUsername}"
                 Style="{StaticResource sInput}"
                 Margin="0,0,0,15"
@@ -155,7 +154,7 @@
                         <Label 
                             Style="{StaticResource sLabel}"
                             Foreground="White"
-                            Padding="10,0,50,0">
+                            Padding="10,0,40,0">
                             Register a new Account
                         </Label>
                         <Image 

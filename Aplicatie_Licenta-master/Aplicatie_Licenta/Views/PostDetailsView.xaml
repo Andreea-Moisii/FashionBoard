@@ -9,45 +9,87 @@
              d:DesignHeight="568" d:DesignWidth="1008">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="81"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
+
+        <Grid
+            Grid.Row="0" Grid.ColumnSpan="3">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007D58"/>
+                    <GradientStop Color="#001E1E2C" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+        </Grid>
+
+        <!--back Button-->
         <Button
-            BorderThickness="0"
-            Grid.Column="1"
-            HorizontalAlignment="Left" 
-            Margin="302,0,0,0"
+            Grid.Row="0" Grid.Column="2"
+            HorizontalAlignment="Right"
+            Margin="0,0,20,0"
+            Style="{StaticResource sTransparentButton}"
             Command="{Binding BackCommand}"
             >
             <Image
-                Source="{StaticResource ic_back_arraw}"/>
+                    Stretch="Fill"
+                    Source="{StaticResource ic_back_arraw_white}"/>
         </Button>
 
-        <Border
-            Grid.Row="1"
-            CornerRadius="15">
-            <hc:Carousel
-                IsCenter="True"
-                AutoRun="True" 
-                ItemsSource="{Binding Images}" >
-                <hc:Carousel.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding Link}" />
-                    </DataTemplate>
-                </hc:Carousel.ItemTemplate>
-            </hc:Carousel>
+        <!--images display-->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
 
-        </Border>
+            <!--curent displayed image-->
+            <Border
+            Grid.ColumnSpan="3"
+            CornerRadius="15" Background="#190067A0">
+                <Image 
+                Source="{Binding Image, FallbackValue='https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg'}"/>
+            </Border>
+
+            <!--previous image button-->
+            <Button
+                Grid.Column="0"
+                Margin="5"
+                Style="{StaticResource sTransparentButton}"
+                Command="{Binding PreviousImageCommand}"
+            >
+                <Image
+                    Stretch="Fill"
+                    Source="{StaticResource ic_left_arraw}"/>
+            </Button>
+
+            <!--next image button-->
+            <Button
+                Grid.Column="2"
+                Margin="5"
+                Style="{StaticResource sTransparentButton}"
+                Command="{Binding NextImageCommand}"
+            >
+                <Image
+                    Stretch="Fill"
+                    Source="{StaticResource ic_right_arraw}"/>
+            </Button>
+
+            
+        </Grid>
+        
 
         <Grid
             Grid.Row="1"
-            Grid.Column="1">
+            Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition/>
@@ -65,46 +107,113 @@
                     CornerRadius="25">
                     <Border.Background>
                         <ImageBrush 
-                            ImageSource="{Binding ProfilePictureUrl}"/>
+                            ImageSource="{Binding ProfilePictureUrl, FallbackValue='https://data.whicdn.com/images/353151432/original.jpg'}"/>
                     </Border.Background>
                 </Border>
                 <!--Usename-->
                 <Button
                     Width="auto"
-                    Background="#1E1E2C"
+                    Background="Transparent"
                     Foreground="#B1B2B8"
                     BorderThickness="0"
                                     
                     FontSize="20"
                     FontWeight="Bold"
                     Padding="0"
-                    Margin="10 0 0 0"
+                    Margin="20 0 0 0"
                     
-                    Content="{Binding Username}"
+                    Content="{Binding Username, FallbackValue='USERNAME'}"
                     Command="{Binding ViewProfileCommand}"
                     />
             </StackPanel>
 
             <Border 
-                Margin="10"
                 Grid.Row="1" 
-                CornerRadius="15"
-                Background="#231E32">
-                <Label
-                    Background="#231E32"
+                CornerRadius="10"
+                Margin="15"
+                Background="Transparent">
+                <TextBlock
+                    Background="#190067A0"
                     Foreground="#B1B2B8"
                     
-                    BorderThickness="0"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
+                    TextWrapping="WrapWithOverflow"
+                    FontSize="15"
+                    FontWeight="Bold"
                     
-                    FontSize="13"
-                    HorizontalContentAlignment="Left"
-                    VerticalContentAlignment="Top"
-                    Content="{Binding Details}" 
+                    Padding="12"
+                    Text="{Binding Details , FallbackValue='---- ʕ•ᴥ• oʔ ---'}"
                 />
             </Border>
 
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label
+                    Style="{StaticResource sLabel}"
+                    Content="{Binding Price, FallbackValue='120 lei'}"/>
+
+                <Button  
+                    Grid.Column="1"
+                    Background="#FF6271"
+                    BorderThickness="0"
+                    hc:BorderElement.CornerRadius="10 10 25 10"
+                    
+                    Command="{Binding LikeCommand}" Height="50" Width="142"
+                        >
+                    <StackPanel 
+                            Orientation="Horizontal"
+                            Height="auto"
+                            HorizontalAlignment="Center">
+                        <Image 
+                            Width="28" Height="28"
+                            Source="{StaticResource ic_heart_full}"
+                            Visibility="{Binding HasLike, Converter={StaticResource cBoolToVisibility}}"/>
+
+                        <Image 
+                            Width="28" Height="28"
+                            Source="{StaticResource ic_heart_empty}"
+                            Visibility="{Binding HasLike,Converter={StaticResource cInverseBoolToVisibility}}"/>
+
+                        <Label
+                            Name="numberLikesLabel"
+                            Background="#FF6271"
+                            Foreground="White"
+                            FontSize="16"
+                            FontWeight="Bold"
+                                                
+                            BorderThickness="0"
+                            Margin="0 0 0 2"
+                                
+                            Content="Save"
+                                />
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Grid>
+
+        <!--Color tag display-->
+        <ItemsControl
+            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+            ItemsSource="{Binding Colors}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border 
+                        Width="60" Height="25"
+                        Margin="5"
+                        CornerRadius="15"
+                        Background="{Binding}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        
     </Grid>
 </UserControl>
