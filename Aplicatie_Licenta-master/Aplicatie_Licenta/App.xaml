@@ -1,0 +1,142 @@
+﻿<Application x:Class="Aplicatie_Licenta.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Aplicatie_Licenta"
+             xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:convertors="clr-namespace:Aplicatie_Licenta.Convertors">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <!--icons--> 
+            <DrawingImage x:Key="ic_back_arraw">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V50 H50 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F1 M50,50z M0,0z M19.104,26.48L27.938,35.312A2.085,2.085,0,1,0,30.896,32.375L23.52,25 30.895,17.625A2.083,2.083,0,0,0,30.895,14.687A2.083,2.083,0,0,0,29.415,14.083A2.084,2.084,0,0,0,27.936,14.687L19.103,23.521A2.084,2.084,0,0,0,19.103,26.479z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_back_arraw_white">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V50 H50 V0 H0 Z">
+                        <GeometryDrawing Brush="white" Geometry="F1 M50,50z M0,0z M19.104,26.48L27.938,35.312A2.085,2.085,0,1,0,30.896,32.375L23.52,25 30.895,17.625A2.083,2.083,0,0,0,30.895,14.687A2.083,2.083,0,0,0,29.415,14.083A2.084,2.084,0,0,0,27.936,14.687L19.103,23.521A2.084,2.084,0,0,0,19.103,26.479z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_play_button">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M24,24z M0,0z M19.266,13.516A1.917,1.917,0,0,0,19.266,10.484A35.763,35.763,0,0,0,9.35,5.068L8.697,4.836C7.449,4.393,6.131,5.237,5.962,6.526A42.49,42.49,0,0,0,5.962,17.474C6.13,18.763,7.449,19.607,8.697,19.164L9.35,18.932A35.762,35.762,0,0,0,19.266,13.516z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_home">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V33 H33 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F1 M33,33z M0,0z M26.757,11.54L18.73,4.503A4.013,4.013,0,0,0,13.378,4.503L5.351,11.54A4.012,4.012,0,0,0,4.013,14.564L4.013,26.257A4.014,4.014,0,0,0,8.027,30.27L24.081,30.27A4.013,4.013,0,0,0,28.095,26.257L28.095,14.55A4.014,4.014,0,0,0,26.757,11.54z M18.73,27.596L13.378,27.596 13.378,20.906A1.338,1.338,0,0,1,14.716,19.568L17.392,19.568A1.338,1.338,0,0,1,18.73,20.906L18.73,27.596z M25.419,26.258A1.338,1.338,0,0,1,24.081,27.595L21.405,27.595 21.405,20.906A4.014,4.014,0,0,0,17.392,16.893L14.716,16.893A4.013,4.013,0,0,0,10.703,20.906L10.703,27.596 8.027,27.596A1.338,1.338,0,0,1,6.689,26.258L6.689,14.55A1.338,1.338,0,0,1,7.144,13.546L15.171,6.523A1.338,1.338,0,0,1,16.937,6.523L24.964,13.546A1.338,1.338,0,0,1,25.419,14.55L25.419,26.256z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_settings">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V32 H32 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F0 M32,32z M0,0z M16,4.106L13.05,7.158A1.667,1.667,0,0,1,11.851,7.667L7.667,7.667 7.667,11.851C7.667,12.303,7.483,12.735,7.158,13.049L4.106,16 7.158,18.951C7.483,19.265,7.667,19.698,7.667,20.15L7.667,24.334 11.851,24.334C12.303,24.334,12.736,24.518,13.05,24.843L16,27.894 18.95,24.842A1.667,1.667,0,0,1,20.149,24.333L24.333,24.333 24.333,20.15C24.333,19.698,24.517,19.265,24.842,18.951L27.894,16 24.842,13.05A1.667,1.667,0,0,1,24.333,11.851L24.333,7.667 20.15,7.667C19.698,7.667,19.265,7.483,18.951,7.158L16,4.106z M14.802,2.468A1.667,1.667,0,0,1,17.198,2.468L20.29,5.667 24.667,5.667C25.587,5.667,26.333,6.413,26.333,7.333L26.333,11.71 29.533,14.801A1.667,1.667,0,0,1,29.533,17.198L26.333,20.29 26.333,24.667C26.333,25.587,25.587,26.333,24.667,26.333L20.29,26.333 17.198,29.533A1.667,1.667,0,0,1,14.802,29.533L11.71,26.333 7.333,26.333C6.413,26.333,5.667,25.587,5.667,24.667L5.667,20.29 2.467,17.198A1.667,1.667,0,0,1,2.467,14.802L5.667,11.71 5.667,7.333C5.667,6.413,6.413,5.667,7.333,5.667L11.71,5.667 14.802,2.467z" />
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F0 M32,32z M0,0z M9.667,16A6.333,6.333,0,1,1,22.333,16A6.333,6.333,0,0,1,9.667,16z M16,11.667A4.333,4.333,0,1,0,16,20.333A4.333,4.333,0,0,0,16,11.667z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_heart">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V33 H33 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F1 M33,33z M0,0z M26.97,7.094A8.415,8.415,0,0,0,16.054,6.238A8.388,8.388,0,0,0,5.137,18.921L13.445,27.242A3.72,3.72,0,0,0,18.663,27.242L26.971,18.921A8.388,8.388,0,0,0,26.971,7.094z M25.084,17.074L16.776,25.383A1.018,1.018,0,0,1,15.332,25.383L7.024,17.035A5.74,5.74,0,0,1,7.024,9.008A5.713,5.713,0,0,1,15.051,9.008A1.337,1.337,0,0,0,16.951,9.008A5.713,5.713,0,0,1,24.977,9.008A5.74,5.74,0,0,1,25.084,17.035L25.084,17.075z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_profile">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V39 H36 V0 H0 Z">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FFB1B2B8" Geometry="F1 M36,39z M0,0z M18.054,3.514A13.379,13.379,0,0,0,8.221,25.936A13.377,13.377,0,0,0,27.887,25.936A13.378,13.378,0,0,0,18.054,3.514z M18.054,27.594A10.703,10.703,0,0,1,10.629,24.584A8.027,8.027,0,0,1,25.479,24.584A10.703,10.703,0,0,1,18.054,27.594z M15.378,14.216A2.676,2.676,0,1,1,20.731,14.216A2.676,2.676,0,0,1,15.378,14.216z M27.298,22.243A10.703,10.703,0,0,0,22.068,17.722A5.352,5.352,0,1,0,14.041,17.722A10.702,10.702,0,0,0,8.81,22.243A10.596,10.596,0,0,1,7.351,16.892A10.703,10.703,0,1,1,28.757,16.892A10.595,10.595,0,0,1,27.298,22.243z" />
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+
+            <!--styles-->
+            <Style x:Key="sLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="#FFB1B2B8" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="sInput" TargetType="{x:Type hc:TextBox}" BasedOn="{StaticResource {x:Type hc:TextBox}}">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="#B1B2B8" />
+                <Setter Property="Background" Value="#3D404B" />
+                <Setter Property="BorderThickness" Value="1.5" />
+                <Setter Property="BorderBrush" Value="#3D404B" />
+                <Setter Property="Width" Value="319"/>
+                <Setter Property="Height" Value="80"/>
+            </Style>
+
+            <Style x:Key="sInputPassword" TargetType="{x:Type hc:PasswordBox}" BasedOn="{StaticResource {x:Type hc:PasswordBox}}">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="#B1B2B8" />
+                <Setter Property="Background" Value="#3D404B" />
+                <Setter Property="BorderThickness" Value="1.5" />
+                <Setter Property="BorderBrush" Value="#3D404B" />
+                <Setter Property="Width" Value="319"/>
+                <Setter Property="Height" Value="80"/>
+            </Style>
+
+            <Style x:Key="sButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Background" Value="#007D58" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Width" Value="319"/>
+                <Setter Property="Height" Value="50"/>
+            </Style>
+
+            <Style x:Key="sTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Foreground" Value="#B1B2B8" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="left"/>
+            </Style>
+
+            <Style x:Key="sTransparentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+
+            <!--coonvertor-->
+            <convertors:InverseBooleanConvertor x:Key="cInverseBoolToVisibility" />
+            <BooleanToVisibilityConverter x:Key="cBoolToVisibility" />
+            <convertors:ViewModelConvertor x:Key="cViewModelToVisability" />
+
+            <!--setting the theme black-->
+            <ResourceDictionary.MergedDictionaries>
+                <hc:ThemeResources RequestedTheme="Dark" AccentColor="#0067A0"/> 
+                <hc:Theme/> 
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    
+</Application>

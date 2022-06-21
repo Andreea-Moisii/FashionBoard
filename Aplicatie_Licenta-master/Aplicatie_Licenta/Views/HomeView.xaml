@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="Aplicatie_Licenta.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:views="clr-namespace:Aplicatie_Licenta.Views"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1085">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="81"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <!-- filtre -->
+        <StackPanel 
+            Grid.Row="2"
+            
+            Orientation="Horizontal">
+
+            <!--button fiter-->
+            <Button 
+                Name="filterButton"
+                
+                Background="Transparent"
+                Foreground="#B1B2B8"
+                BorderThickness="0"
+                Padding="0"
+                Width="auto"
+                Height="45">
+                <StackPanel Orientation="Horizontal">
+                    <Image 
+                        Source="icons/equalizer.png" 
+                        Width="32" 
+                        Height="32"
+                        Margin="5"/>
+                    <TextBlock 
+                        Text="Filters" 
+                        FontSize="15"
+                        FontWeight="Bold"
+                        
+                        VerticalAlignment="Center"
+                        Margin="5"/>
+                </StackPanel>
+            </Button>
+
+            <!--button sortare-->
+            <hc:ComboBox 
+                SelectedIndex="0"
+                Width="200"
+                VerticalAlignment="Center"
+                
+                BorderThickness="0"
+                Background="Transparent"
+                
+                HorizontalContentAlignment="Center"
+                
+                FontSize="15"
+                FontWeight="Bold" 
+                Foreground="#B1B2B8"
+                >
+                <ComboBoxItem Content="Most Popular"/>
+                <ComboBoxItem Content="Expensive"/>
+                <ComboBoxItem Content="Cheap"/>
+            </hc:ComboBox>
+        </StackPanel>
+
+        <!-- Statius bara de cautare -->
+        <Grid
+            Grid.Row="0">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF0067A0"/>
+                    <GradientStop Color="#001E1E2C" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            
+            <hc:SearchBar
+                hc:InfoElement.Placeholder="Search here ..."
+                hc:InfoElement.Necessary="True"
+                
+                Width="530"
+                Margin="0 0 23 0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                
+                BorderThickness="1.5"
+                Background="#3D404B"
+                Foreground="#B1B2B8"
+                />
+        </Grid>
+
+        <!--loading circle-->
+        <hc:LoadingCircle 
+            Visibility="{Binding IsLoading, Converter={StaticResource cBoolToVisibility}}"
+            Grid.Row="1"
+            Width="50"
+            Height="50"/>
+        
+        <!--post pannel-->
+        <hc:TransitioningContentControl
+            Visibility="{Binding IsLoading, Converter={StaticResource cInverseBoolToVisibility}}"
+            Grid.Row="1">
+            <ScrollViewer>
+                <ItemsControl ItemsSource="{Binding ViewablePosts}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:PostCard/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </hc:TransitioningContentControl>
+
+    </Grid>
+</UserControl>

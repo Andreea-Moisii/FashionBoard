@@ -1,0 +1,198 @@
+﻿<UserControl x:Class="Aplicatie_Licenta.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hc="https://handyorg.github.io/handycontrol" 
+             xmlns:local="clr-namespace:Aplicatie_Licenta.Views" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1085">
+    <Grid
+         Background="#181823">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="3" Margin="0,0,0,487" Grid.RowSpan="2">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF007D58"/>
+                    <GradientStop Color="#001E1E2C" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Label
+                HorizontalAlignment="Center"
+                Style="{StaticResource sLabel}"
+                FontSize="40">
+                Wellcome Back, more outfits awaits
+            </Label>
+        </Grid>
+       
+
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1"
+            Background="#B1B2B8"/>
+
+        <!--login elements--> 
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            >
+            <!--username input-->
+            <hc:TextBox
+                hc:InfoElement.Title="Username"
+                hc:InfoElement.Placeholder="Username"
+                Text="{Binding LoginUsername}"
+                Style="{StaticResource sInput}"
+                Margin="0,0,0,15"
+             />
+            
+            <!--password input-->
+            <hc:PasswordBox 
+                hc:InfoElement.Title="Password"
+                ShowEyeButton ="True"
+                Style="{StaticResource sInputPassword}"
+                Margin="0,0,0,50"
+                IsSafeEnabled="False"
+                UnsafePassword="{Binding LoginPassword}"
+                />
+            
+            <!--login button-->
+            <Border
+                CornerRadius="20">
+                <Button
+                    Style="{StaticResource sButton}"
+                    Command="{Binding LogInCommand}">
+                    <StackPanel Orientation="Horizontal" Width="300">
+                        <Label 
+                            Style="{StaticResource sLabel}"
+                            Foreground="White"
+                            Padding="10,0,50,0">
+                            Login to Your Account
+                        </Label>
+                        <Image 
+                            Source="{StaticResource ic_play_button}"
+                            Width="24"
+                            Height="24"
+                            />
+                    </StackPanel>
+                </Button>
+            </Border>
+        </StackPanel>
+        
+        <!--register elements-->
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="2"
+            
+            Orientation="Vertical"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            >
+            <!--username input-->
+            <hc:TextBox
+                hc:InfoElement.Title="Username"
+                Text="{Binding RegisterUsername}"
+                Style="{StaticResource sInput}"
+                Margin="0,0,0,15"
+             />
+            
+            <!--email input-->
+            <hc:TextBox
+                hc:InfoElement.Title="Email"
+                TextType="Mail"
+                Text="{Binding RegisterEmail}"
+                hc:InfoElement.RegexPattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                Style="{StaticResource sInput}"
+                Margin="0,0,0,15"
+             />
+            
+            <!--password input-->
+            <hc:PasswordBox 
+                hc:InfoElement.Title="Password"
+                ShowEyeButton ="True"
+                Style="{StaticResource sInputPassword}"
+                Margin="0,0,0,15"
+                IsSafeEnabled="False"
+                UnsafePassword="{Binding RegisterPassword}"
+                />
+            
+
+
+            <!--confirm password input-->
+            <hc:PasswordBox
+                hc:InfoElement.Title="Confirm Password"
+                ShowEyeButton ="True"
+                
+                Style="{StaticResource sInputPassword}"
+                Margin="0,0,0,50"
+                IsSafeEnabled="False"
+                UnsafePassword="{Binding RegisterConfirmPassword}"
+                />
+            
+            <!--register button-->
+            <Border
+                CornerRadius="20">
+                <Button
+                    Style="{StaticResource sButton}"
+                    Background="#0067A0"
+                    Command="{Binding RegisterCommand}">
+                    <StackPanel Orientation="Horizontal" Width="300">
+                        <Label 
+                            Style="{StaticResource sLabel}"
+                            Foreground="White"
+                            Padding="10,0,50,0">
+                            Register a new Account
+                        </Label>
+                        <Image 
+                            Source="{StaticResource ic_play_button}"
+                            Width="24"
+                            Height="24"
+                            />
+                    </StackPanel>
+                </Button>
+            </Border>
+        </StackPanel>
+
+        <!--login message-->
+        <Label
+            Grid.Row="3"
+            Grid.Column="0"
+            
+            Style="{StaticResource sLabel}"
+            FontWeight="Medium"
+            Foreground="#FF586E"
+            Content="{Binding ErrorLogin}"
+            />
+        
+        <!--register message-->
+        <Label
+            Grid.Row="3"
+            Grid.Column="3"
+            
+            Style="{StaticResource sLabel}"
+            FontWeight="Medium"
+            Foreground="#007D58"
+            
+            Content="{Binding ErrorRegister}"
+            />
+
+
+
+
+    </Grid>
+</UserControl>

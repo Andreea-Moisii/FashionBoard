@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="Aplicatie_Licenta.Views.PostCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:local="clr-namespace:Aplicatie_Licenta.Views"
+             mc:Ignorable="d" >
+    <Border
+        Margin="10"
+        Width="300" 
+        Height="395" 
+        Background="#2A2C3E" 
+        CornerRadius="15">
+
+        <StackPanel Orientation="Vertical">
+
+            <!--imagine profill + nume-->
+            <StackPanel 
+                Orientation="Horizontal"
+                Margin="10">
+                <Border 
+                    x:Name="profilePictureBorder"
+                    Width="45"
+                    Height="45"
+                    CornerRadius="25">
+                    <Border.Background>
+                        <ImageBrush 
+                            ImageSource="{Binding ProfilePictureUrl, FallbackValue='https://data.whicdn.com/images/353151432/original.jpg'}"/>
+                    </Border.Background>
+                </Border>
+                <Label
+                    Width="auto"
+                    Background="#2A2C3E"
+                    Foreground="#B1B2B8"
+                    BorderThickness="0"
+                                    
+                    FontSize="15"
+                    FontWeight="Bold"
+                    
+                    Content="{Binding Username, FallbackValue='Username'}"
+                    />
+            </StackPanel>
+
+            <!--imaginea principala a postarii-->
+            <Border
+                Name="MainImageBorder"
+                Height="265" 
+                Width="280" 
+                CornerRadius="15">
+                <!--imaginea pusa in prop de background-->
+                <Border.Background>
+                    <ImageBrush 
+                        Opacity="0.85"
+                        Stretch="Fill"
+                        ImageSource="{Binding MainImageUrl, FallbackValue='https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg'}"/>
+                </Border.Background>
+            </Border>
+
+            <Border
+                Background="#3F4152"
+                                
+                CornerRadius="15"
+                Margin="10">
+                <StackPanel 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <Button
+                        Background="#3F4152"
+                        Foreground="#B1B2B8"
+                                        
+                        Width="172"
+                        Height="46"
+                        FontSize="12"
+                        FontWeight="Bold"
+                        BorderThickness="0"
+                        hc:BorderElement.CornerRadius="15 0 0 15"
+                        
+                        Command="{Binding ViewMoreCommand}"
+                        >
+                        View More
+                    </Button>
+                    <Button
+                        Height="46"
+                        Width="108"
+                                        
+                        Background="#FF6271"
+                        BorderThickness="0"
+                        hc:BorderElement.CornerRadius="0 15 15 0"
+                        
+                        Command="{Binding LikeCommand}"
+                        >
+                        <StackPanel 
+                            Orientation="Horizontal"
+                            Height="auto"
+                            HorizontalAlignment="Center">
+                            <Image 
+                                Width="25"
+                                Height="25"
+                                Source="{Binding HearthIcon}"/>
+                            <Label
+                                Name="numberLikesLabel"
+                                Background="#FF6271"
+                                Foreground="White"
+                                FontSize="15"
+                                FontWeight="Bold"
+                                                
+                                BorderThickness="0"
+                                Margin="0 0 0 2"
+                                
+                                Content="{Binding NumberLikes}"
+                                />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+    </Border>
+</UserControl>

@@ -1,0 +1,19 @@
+POST http://localhost:8000/api/users
+Content-Type: application/json
+
+{
+    "username": "test",
+    "password": "test",
+    "email": "test@email",
+    "description": "test_description"
+}
+
+###
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{}
+
+
+###
+# Test your FastAPI endpoints

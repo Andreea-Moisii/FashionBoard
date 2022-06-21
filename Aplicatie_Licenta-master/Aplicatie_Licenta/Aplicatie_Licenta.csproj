@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Fonts\Roboto-Medium.ttf" />
+    <None Remove="Views\icons\ellipse.png" />
+    <None Remove="Views\icons\equalizer.png" />
+    <None Remove="Views\icons\heart.png" />
+    <None Remove="Views\icons\heart_solid.png" />
+    <None Remove="Views\icons\heart_white.png" />
+    <None Remove="Views\icons\home.png" />
+    <None Remove="Views\icons\profile.png" />
+    <None Remove="Views\icons\settings.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HandyControls" Version="3.3.11" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Fonts\Roboto-Medium.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Views\icons\ellipse.png" />
+    <Resource Include="Views\icons\equalizer.png" />
+    <Resource Include="Views\icons\heart.png" />
+    <Resource Include="Views\icons\heart_solid.png" />
+    <Resource Include="Views\icons\heart_white.png" />
+    <Resource Include="Views\icons\home.png" />
+    <Resource Include="Views\icons\profile.png" />
+    <Resource Include="Views\icons\settings.png" />
+  </ItemGroup>
+
+</Project>
