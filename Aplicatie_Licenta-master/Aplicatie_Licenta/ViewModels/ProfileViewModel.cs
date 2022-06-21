@@ -78,6 +78,10 @@ namespace Aplicatie_Licenta.ViewModels
                     (task) =>
                     {
                         _user = task.Result;
+                        OnPropertyChanged(nameof(Username));
+                        OnPropertyChanged(nameof(Description));
+                        OnPropertyChanged(nameof(ProfilePictureUrl));
+
                     });
             }
 

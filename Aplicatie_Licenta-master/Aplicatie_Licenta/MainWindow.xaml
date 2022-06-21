@@ -18,61 +18,85 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="350"/>
         </Grid.ColumnDefinitions>
-       
 
-        <!--meniu lateral pt navigare-->
-        <hc:SideMenu 
-            Visibility="{Binding CurrentViewModel, Converter={StaticResource cViewModelToVisability}}"
+        <Grid
+            Visibility="{Binding CurrentViewModel, Converter={StaticResource cViewModelToVisability}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+
+            <!--meniu lateral pt navigare-->
+            <hc:SideMenu
+                Grid.Column = "0" 
+                Grid.Row="1" 
+                Width="auto"
+                Background="#181823"
+                Foreground=" White"
             
-            Grid.Column = "0" 
-            Grid.Row="1" 
-            Width="auto"
-            Background="#181823"
-            Foreground=" White"
-            
-            VerticalAlignment="Center"
-            BorderBrush="#FF181823" 
-            SideBrush="#FF0067A0"
-            AutoSelect ="True"
-            >
+                VerticalAlignment="Center"
+                BorderBrush="#FF181823" 
+                SideBrush="#FF0067A0"
+                AutoSelect="True">
 
-            home button
-            <hc:SideMenuItem 
-                Background="#181823"
-                Command="{Binding HomeCommand}">
-                <hc:SideMenuItem.Icon>
-                    <Image Source="{StaticResource ic_home}" Width="32" Height="32"/>
-                </hc:SideMenuItem.Icon>
-            </hc:SideMenuItem>
+                <!--home button-->
+                <hc:SideMenuItem 
+                    Background="#181823"
+                    Margin="0, 10, 0, 10"
+                    Command="{Binding HomeCommand}">
+                    <hc:SideMenuItem.Icon>
+                        <Image Source="{StaticResource ic_home}" Width="32" Height="32"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
 
-            profile button
-            <hc:SideMenuItem   
-                Background="#181823"
-                Command="{Binding ProfileCommand}">
-                <hc:SideMenuItem.Icon>
-                    <Image Source="{StaticResource ic_profile}" Width="32" Height="32"/>
-                </hc:SideMenuItem.Icon>
-            </hc:SideMenuItem>
+                <!--profile button-->
+                <hc:SideMenuItem   
+                    Background="#181823"
+                    Margin="0, 10, 0, 10"
+                    Command="{Binding ProfileCommand}">
+                    <hc:SideMenuItem.Icon>
+                        <Image Source="{StaticResource ic_profile}" Width="32" Height="32"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
 
-            favorite button
-            <hc:SideMenuItem   
-                Background="#181823"
-                Command="{Binding SavesCommand}">
-                <hc:SideMenuItem.Icon>
-                    <Image Source="{StaticResource ic_heart}" Width="32" Height="32"/>
-                </hc:SideMenuItem.Icon>
-            </hc:SideMenuItem>
+                <!--favorite button-->
+                <hc:SideMenuItem   
+                    Background="#181823"
+                    Margin="0, 10, 0, 10"
+                    Command="{Binding SavesCommand}">
+                    <hc:SideMenuItem.Icon>
+                        <Image Source="{StaticResource ic_heart}" Width="32" Height="32"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
 
-            settings button
-            <hc:SideMenuItem   
-                Background="#181823"
-                Command="{Binding SettingsCommand}">
-                <hc:SideMenuItem.Icon>
-                    <Image Source="{StaticResource ic_settings}" Width="32" Height="32"/>
-                </hc:SideMenuItem.Icon>
-            </hc:SideMenuItem>
-        </hc:SideMenu>
+                <!--settings button-->
+                <hc:SideMenuItem   
+                    Background="#181823"
+                    Margin="0, 10, 0, 10"
+                    Command="{Binding SettingsCommand}">
+                    <hc:SideMenuItem.Icon>
+                        <Image Source="{StaticResource ic_settings}" Width="32" Height="32"/>
+                    </hc:SideMenuItem.Icon>
+                </hc:SideMenuItem>
+            </hc:SideMenu>
 
+            <!--// log out button //-->
+            <Button
+                Grid.Row="2"
+                Style="{StaticResource sTransparentButton}"
+                Command="{Binding LogOutCommand}" 
+                Height="40" 
+                Width="40">
+                <Image
+                    Width="auto"
+                    Height="auto"
+                    Margin="5"
+                    Stretch="Fill"
+                    Source="{StaticResource ic_logout}"/>
+            </Button>
+
+        </Grid>
 
         <!--the content of the window-->
         <Grid Grid.Column="1" Grid.ColumnSpan="2">
@@ -102,10 +126,32 @@
                 </DataTemplate>
             </Grid.Resources>
 
-            <ContentControl Content ="{Binding CurrentViewModel}"/>
+            <ContentControl  Content ="{Binding CurrentViewModel}"/>
         </Grid>
+
+        <!--// create new post button //-->
         
-        <!--popup meseges container-->
+        <Button
+            Visibility="{Binding CurrentViewModel, Converter={StaticResource cViewModelNPToVisability}}"
+            hc:BorderElement.CornerRadius="30"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="10"
+            Grid.Column="2"
+            Style="{StaticResource sTransparentButton}"
+            Command="{Binding NewPostCommand}"
+            Background="#007D58"
+            Width="50"
+            Height="50"
+        >
+            <Image
+                Width="25"
+                Height="25"
+                Stretch="Fill"
+                Source="{StaticResource ic_plus}"/>
+        </Button>
+
+            <!--popup meseges container-->
         <Grid Grid.Column="2">
             <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right">
                 <StackPanel hc:Growl.Token="Notff" VerticalAlignment="Top" Margin="0"/>

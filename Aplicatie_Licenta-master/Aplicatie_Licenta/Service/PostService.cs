@@ -55,7 +55,7 @@ namespace Aplicatie_Licenta.Service
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8000/api/posts");
+            HttpResponseMessage response = await client.GetAsync($"http://localhost:8000/api/posts/{Username}");
             string jsonResponse = await response.Content.ReadAsStringAsync();
 
             var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);

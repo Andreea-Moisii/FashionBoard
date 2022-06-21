@@ -1,6 +1,9 @@
 ﻿using Aplicatie_Licenta.Commands;
+using Aplicatie_Licenta.Commands.Normal;
 using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.Stores;
+using HandyControl.Controls;
+using HandyControl.Tools;
 using System.Windows.Input;
 
 namespace Aplicatie_Licenta.ViewModels
@@ -14,6 +17,8 @@ namespace Aplicatie_Licenta.ViewModels
         public ICommand ProfileCommand { get; }
         public ICommand SavesCommand { get; }
         public ICommand SettingsCommand { get; }
+        public ICommand LogOutCommand { get; }
+        public ICommand NewPostCommand { get; }
 
 
         public MainViewModel(NavigationStore navigationStore)
@@ -32,6 +37,12 @@ namespace Aplicatie_Licenta.ViewModels
                 navigationStore);
             
             SettingsCommand = new NavigateCommand(() => new SettingsViewModel(navigationStore), navigationStore);
+
+            LogOutCommand = new LogoutCommand(navigationStore);
+
+            NewPostCommand = new ExecuteCommand(() =>
+            {
+            });
         }
 
         private void OnCurrentModelChanged()

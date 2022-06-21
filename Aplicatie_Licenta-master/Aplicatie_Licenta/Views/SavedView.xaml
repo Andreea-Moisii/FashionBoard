@@ -12,30 +12,35 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="81"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
 
         <!-- filtre -->
-        <StackPanel 
-            Grid.Row="2"
-            
-            Orientation="Horizontal">
+        <Grid 
+            Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+
 
             <!--button fiter-->
             <Button 
+                Grid.Column="0"
                 Name="filterButton"
-                
                 Background="Transparent"
                 Foreground="#B1B2B8"
                 BorderThickness="0"
                 Padding="0"
                 Width="auto"
-                Height="45">
+                Height="45"
+                HorizontalAlignment="Right"
+                Margin="0,0,20,0">
                 <StackPanel Orientation="Horizontal">
                     <Image 
                         Source="icons/equalizer.png" 
-                        Width="32" 
-                        Height="32"
+                        Width="30" 
+                        Height="30"
                         Margin="5"/>
                     <TextBlock 
                         Text="Filters" 
@@ -49,24 +54,24 @@
 
             <!--button sortare-->
             <hc:ComboBox 
+                Grid.Column="1"
+                HorizontalAlignment="Left"
                 SelectedIndex="0"
                 Width="200"
                 VerticalAlignment="Center"
-                
                 BorderThickness="0"
-                Background="Transparent"
-                
+                Background="Transparent" 
                 HorizontalContentAlignment="Center"
-                
                 FontSize="15"
                 FontWeight="Bold" 
                 Foreground="#B1B2B8"
+                Margin="20,0,0,0"
                 >
                 <ComboBoxItem Content="Most Popular"/>
                 <ComboBoxItem Content="Expensive"/>
                 <ComboBoxItem Content="Cheap"/>
             </hc:ComboBox>
-        </StackPanel>
+        </Grid>
 
         <!-- Statius bara de cautare -->
         <Grid

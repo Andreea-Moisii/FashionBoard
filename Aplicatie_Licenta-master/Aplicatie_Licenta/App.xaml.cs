@@ -16,7 +16,6 @@ namespace Aplicatie_Licenta
             _navigationStore = new NavigationStore();
         }
 
-
         protected override void OnStartup(StartupEventArgs e)
         {
             _navigationStore.CurrentViewModel = new LogInViewModel(_navigationStore);

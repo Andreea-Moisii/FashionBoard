@@ -116,6 +116,32 @@
                 </DrawingImage.Drawing>
             </DrawingImage>
 
+            <DrawingImage x:Key="ic_logout">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                        <GeometryDrawing Brush="#FF2727" Geometry="F1 M24,24z M0,0z M10,8.082C10,7.899,9.81,7.78,9.652,7.87A4.75,4.75,0,1,0,14.348,7.87C14.189,7.78,14,7.9,14,8.082L14,9.316C14,9.393,14.036,9.466,14.095,9.515A3.25,3.25,0,1,1,9.905,9.515A0.261,0.261,0,0,0,10,9.316L10,8.082z" />
+                        <GeometryDrawing Brush="#FF2727" Geometry="F1 M24,24z M0,0z M12.75,7A0.75,0.75,0,0,0,11.25,7L11.25,12A0.75,0.75,0,0,0,12.75,12L12.75,7z" />
+                        <GeometryDrawing Brush="#FF2727" Geometry="F0 M24,24z M0,0z M3.25,12A8.75,8.75,0,1,1,20.75,12A8.75,8.75,0,0,1,3.25,12z M12,4.75A7.25,7.25,0,1,0,12,19.25A7.25,7.25,0,0,0,12,4.75z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_plus">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V30 H30 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M30,30z M0,0z M15.938,8.75A0.937,0.937,0,1,0,14.062,8.75L14.062,14.063 8.75,14.063A0.937,0.937,0,1,0,8.75,15.937L14.063,15.937 14.063,21.25A0.937,0.937,0,1,0,15.937,21.25L15.937,15.937 21.25,15.937A0.937,0.937,0,1,0,21.25,14.063L15.937,14.063 15.937,8.75z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="ic_filters">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V30 H30 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFB1B2B8" Geometry="F1 M30,30z M0,0z M25,10.225L25,3.75A1.25,1.25,0,0,0,22.5,3.75L22.5,10.225A3.75,3.75,0,0,0,22.5,17.275L22.5,26.25A1.25,1.25,0,0,0,25,26.25L25,17.275A3.75,3.75,0,0,0,25,10.225z M23.75,15A1.25,1.25,0,1,1,23.75,12.501A1.25,1.25,0,0,1,23.75,15z M16.25,17.725L16.25,3.75A1.25,1.25,0,0,0,13.75,3.75L13.75,17.725A3.75,3.75,0,0,0,13.75,24.775L13.75,26.25A1.25,1.25,0,0,0,16.25,26.25L16.25,24.775A3.75,3.75,0,0,0,16.25,17.725z M15,22.5A1.25,1.25,0,1,1,15,20.001A1.25,1.25,0,0,1,15,22.5z M7.5,7.725L7.5,3.75A1.25,1.25,0,1,0,5,3.75L5,7.725A3.75,3.75,0,0,0,5,14.775L5,26.25A1.25,1.25,0,0,0,7.5,26.25L7.5,14.775A3.75,3.75,0,0,0,7.5,7.725z M6.25,12.5A1.25,1.25,0,1,1,6.25,10A1.25,1.25,0,0,1,6.25,12.5z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
 
             <!--styles-->
             <Style x:Key="sLabel" TargetType="Label">
@@ -181,11 +207,12 @@
                 <Setter Property="BorderThickness" Value="0" />
             </Style>
 
-
+            
             <!--coonvertor-->
             <convertors:InverseBooleanConvertor x:Key="cInverseBoolToVisibility" />
             <BooleanToVisibilityConverter x:Key="cBoolToVisibility" />
             <convertors:ViewModelConvertor x:Key="cViewModelToVisability" />
+            <convertors:ViewModelNPConvertor x:Key="cViewModelNPToVisability" />
 
             <!--setting the theme black-->
             <ResourceDictionary.MergedDictionaries>
