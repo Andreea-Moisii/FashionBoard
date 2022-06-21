@@ -124,6 +124,10 @@
                 <DataTemplate DataType="{x:Type vms:SettingsViewModel}">
                     <views:SettingsView/>
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vms:CreateUpdatePostViewModel}">
+                    <views:CreateUpdatePostView/>
+                </DataTemplate>
             </Grid.Resources>
 
             <ContentControl  Content ="{Binding CurrentViewModel}"/>

@@ -40,9 +40,7 @@ namespace Aplicatie_Licenta.ViewModels
 
             LogOutCommand = new LogoutCommand(navigationStore);
 
-            NewPostCommand = new ExecuteCommand(() =>
-            {
-            });
+            NewPostCommand = new NavigateCommand(() => new CreateUpdatePostViewModel(navigationStore, new Models.Post()), navigationStore);
         }
 
         private void OnCurrentModelChanged()

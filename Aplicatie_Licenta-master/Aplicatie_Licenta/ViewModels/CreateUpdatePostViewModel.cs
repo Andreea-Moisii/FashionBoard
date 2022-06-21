@@ -14,11 +14,13 @@ namespace Aplicatie_Licenta.ViewModels
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
         private Post _post;
+        private NavigationStore navigationStore;
 
         public CreateUpdatePostViewModel(NavigationStore navigationStore, Post post)
         {
             _navigationStore = navigationStore;
             _post = post;
         }
+
     }
 }
