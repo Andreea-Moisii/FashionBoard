@@ -142,6 +142,14 @@
                 </DrawingImage.Drawing>
             </DrawingImage>
 
+            <DrawingImage x:Key="ic_x">
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V50 H50 V0 H0 Z">
+                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M50,50z M0,0z M20.333,18.833C19.885,18.385 19.185,18.357 18.771,18.771 18.357,19.185 18.385,19.884 18.833,20.333L23.438,24.937 19.188,29.187C18.773,29.602 18.801,30.301 19.25,30.75 19.699,31.199 20.398,31.227 20.813,30.812L25.063,26.562 29.667,31.167C30.115,31.615 30.815,31.643 31.229,31.229 31.643,30.815 31.615,30.115 31.167,29.667L26.562,25.062 30.812,20.812C31.227,20.398 31.199,19.699 30.75,19.25 30.301,18.801 29.602,18.773 29.187,19.187L24.937,23.437 20.333,18.833z" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
 
             <!--styles-->
             <Style x:Key="sLabel" TargetType="Label">

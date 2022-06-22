@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="Aplicatie_Licenta.CustomComponents.ImageSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aplicatie_Licenta.CustomComponents"
+             mc:Ignorable="d"
+             Name="ImageSelectorWindow"
+             xmlns:hc="https://handyorg.github.io/handycontrol" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    
+
+    <Grid 
+        Width="100" 
+        Height="100">
+
+        <Border
+            CornerRadius="50"
+            BorderThickness="0.5"
+            BorderBrush="#0067A0"
+            Background="#2A2C3E"/>
+        
+        <Border
+            CornerRadius="50"
+            BorderThickness="0.5"
+            BorderBrush="#0067A0">
+            <Border.Background>
+                <!--// an image //-->
+                <ImageBrush 
+                    Stretch="UniformToFill"
+                    ImageSource="{Binding Image, ElementName=ImageSelectorWindow}"/>
+            </Border.Background>
+        </Border>
+
+        <Border CornerRadius="50">
+            <!--<Button Width="100" Height="100"-->
+                    <!--Style="{StaticResource sTransparentButton}">-->
+            <Border Width="30" Height="30"
+                        CornerRadius="15">
+                <Button Style="{StaticResource sTransparentButton}"
+                        Background="Gray"
+                        hc:BorderElement.CornerRadius="15"
+                        Click="Button_Click">
+                    <Grid>
+                        <Image
+                            Visibility="{Binding HasValue, ElementName=ImageSelectorWindow, Converter={StaticResource cInverseBoolToVisibility}}"
+                            Source="{StaticResource ic_plus}"/>
+                        
+                        <Image 
+                            Visibility="{Binding HasValue, ElementName=ImageSelectorWindow, Converter={StaticResource cBoolToVisibility}}"
+                            Source="{StaticResource ic_x}"/>
+                    </Grid>
+                </Button>
+            </Border>
+                
+            <!--</Button>-->
+        </Border>
+        
+    </Grid>
+</UserControl>

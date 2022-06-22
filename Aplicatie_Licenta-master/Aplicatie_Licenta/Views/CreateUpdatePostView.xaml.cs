@@ -24,5 +24,10 @@ namespace Aplicatie_Licenta.Views
         {
             InitializeComponent();
         }
+
+        private void ImageSelector_ImageSelected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
