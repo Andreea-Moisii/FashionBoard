@@ -54,8 +54,10 @@ namespace Aplicatie_Licenta.ViewModels
             index++;
             if (index >= _post.Images.Count())
                 index = 0;
-        }
+            OnPropertyChanged(nameof(Image));
 
+        }
+        
         public void PreviousImage()
         {
             index--;
@@ -63,6 +65,7 @@ namespace Aplicatie_Licenta.ViewModels
                 index = _post.Images.Count() - 1;
                 index = index < 0 ? 0 : index;
             }
+            OnPropertyChanged(nameof(Image));
         }
 
 
