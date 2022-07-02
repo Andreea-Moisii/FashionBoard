@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aplicatie_Licenta.Models
+﻿namespace Aplicatie_Licenta.Models
 {
     public class ColorCode
     {
@@ -13,7 +7,7 @@ namespace Aplicatie_Licenta.Models
         public int Green { get; set; }
         public int Blue { get; set; }
 
-        
+
         public ColorCode()
         {
             Code = "#000000";
@@ -21,7 +15,7 @@ namespace Aplicatie_Licenta.Models
             Green = 0;
             Blue = 0;
         }
-        
+
         public ColorCode(string code, int red, int green, int blue)
         {
             Code = code;

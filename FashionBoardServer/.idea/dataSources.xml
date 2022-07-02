@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="FBDatabase" uuid="39f79e29-5964-4e43-88de-04b5f918aec1">
+    <data-source source="LOCAL" name="FBDatabase" uuid="517e3965-7a67-4164-8353-b87117571ca2">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\moisi\Desktop\Licenta\FashionBoardServer\FBDatabase.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\moisi\Desktop\Licenta\Licenta_FashionBoard\FashionBoardServer\FBDatabase.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

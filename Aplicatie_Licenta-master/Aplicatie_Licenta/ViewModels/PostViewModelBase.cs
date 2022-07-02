@@ -1,12 +1,10 @@
 ﻿using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Service;
-using Aplicatie_Licenta.Service.Schemas.Post;
 using System;
-using System.Linq;
 
 namespace Aplicatie_Licenta.ViewModels
 {
-    public class PostViewModelBase:ViewModelBase
+    public class PostViewModelBase : ViewModelBase
     {
         protected readonly Post _post;
 

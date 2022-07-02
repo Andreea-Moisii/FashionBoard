@@ -1,23 +1,19 @@
 ﻿using Aplicatie_Licenta.Commands;
 using Aplicatie_Licenta.Models;
-using Aplicatie_Licenta.Service.Schemas.Post;
 using Aplicatie_Licenta.Stores;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Aplicatie_Licenta.ViewModels
 {
-    public class PostDetailsViewModel: PostViewModelBase
+    public class PostDetailsViewModel : PostViewModelBase
     {
         // naviagation store
         private readonly NavigationStore _navigationStore;
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
-        
+
         // display data
         public IEnumerable<string> Images => _post.Images;
         public string Details => _post.Description;
@@ -27,7 +23,7 @@ namespace Aplicatie_Licenta.ViewModels
         private int index = 0;
         public string Image => _post.Images.Skip(index).First();
 
-        
+
         // comands 
         public ICommand LikeCommand { get; }
         public ICommand BackCommand { get; }
@@ -35,11 +31,11 @@ namespace Aplicatie_Licenta.ViewModels
         public ICommand PreviousImageCommand { get; }
         public ICommand ViewProfileCommand { get; }
 
-        
+
         public PostDetailsViewModel(NavigationStore navigationStore, Post post, ViewModelBase lastViewModel) : base(post)
         {
             _navigationStore = navigationStore;
-            
+
             LikeCommand = new LikeCommand(this);
             BackCommand = new NavigateCommand(() => lastViewModel, navigationStore);
             NextImageCommand = new ExecuteCommand(NextImage);
@@ -57,11 +53,12 @@ namespace Aplicatie_Licenta.ViewModels
             OnPropertyChanged(nameof(Image));
 
         }
-        
+
         public void PreviousImage()
         {
             index--;
-            if (index < 0) {
+            if (index < 0)
+            {
                 index = _post.Images.Count() - 1;
                 index = index < 0 ? 0 : index;
             }

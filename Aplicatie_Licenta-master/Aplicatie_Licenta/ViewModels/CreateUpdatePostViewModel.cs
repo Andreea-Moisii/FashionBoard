@@ -3,17 +3,14 @@ using Aplicatie_Licenta.Commands.Async;
 using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.Stores;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Aplicatie_Licenta.ViewModels
 {
-    public class CreateUpdatePostViewModel: ViewModelBase
+    public class CreateUpdatePostViewModel : ViewModelBase
     {
         private readonly NavigationStore _navigationStore;
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
@@ -71,6 +68,6 @@ namespace Aplicatie_Licenta.ViewModels
 
             OnPropertyChanged(nameof(ImgChangeCmd));
         }
-        
+
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aplicatie_Licenta.Service.Schemas.User
+﻿namespace Aplicatie_Licenta.Service.Schemas.User
 {
     public class UserRegister
     {

@@ -50,6 +50,22 @@ namespace Aplicatie_Licenta.Service
             return posts.Select(p => ToPost(p));
         }
 
+        public static async Task<IEnumerable<Post>> GetFiterPosts(int sortId = 0, string color = "")
+        {
+            using HttpClient client = new();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
+            
+            // remove first letter
+            if (color!= "")
+                color = color.Remove(0,3); // remove first 3 leters: # and 2 letters for transparency
+
+            HttpResponseMessage response = await client.GetAsync($"http://localhost:8000/api/filter/posts?sortId={sortId}&color={color}");
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
+            return posts.Select(p => ToPost(p));
+        }
+
         public static async Task<IEnumerable<Post>> GetAllPostsForUser(string Username)
         {
             using HttpClient client = new();
@@ -73,17 +89,6 @@ namespace Aplicatie_Licenta.Service
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{post.Id_post}", content);
-        }
-
-        public static async Task UpdatePostColors(int id_post, IEnumerable<string> postColors)
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-
-            var json = JsonConvert.SerializeObject(postColors);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{id_post}/colors", content);
         }
 
         public static async Task UpdatePostImages(int id_post, IEnumerable<string> postImages)

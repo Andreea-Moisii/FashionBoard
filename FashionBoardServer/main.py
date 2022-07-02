@@ -1,5 +1,7 @@
 from datetime import datetime
+from math import sqrt
 
+import numpy as np
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -145,9 +147,9 @@ def get_posts(db: Session = Depends(get_db), user_id: int = Depends(auth_handler
 # get all posts for user
 @app.get("/api/posts/{username}", response_model=list[PostOut])
 def get_posts(username: str, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    posts = db.query(models.Post)\
-            .filter(models.Post.id_user ==
-                    db.query(models.User).filter(models.User.username == username).first().id_user)
+    posts = db.query(models.Post) \
+        .filter(models.Post.id_user ==
+                db.query(models.User).filter(models.User.username == username).first().id_user)
 
     return_posts = []
     for post in posts:
@@ -171,6 +173,7 @@ def get_posts(username: str, db: Session = Depends(get_db), user_id: int = Depen
         return_posts.append(new_post)
 
     return return_posts
+
 
 # create a new post
 @app.post("/api/posts")
@@ -294,7 +297,95 @@ def delete_post(id_post: int, db: Session = Depends(get_db), user_id: int = Depe
     return "Post deleted"
 
 
+# get posts by filters
+@app.get("/api/filter/posts")
+def get_posts_by_filters(sortId: int = 0, color: str = "", db: Session = Depends(get_db),
+                         user_id: int = Depends(auth_handler.auth_wrapper)):
+    # sortId = 0: sort by date
+    # sortId = 1: popular
+    # sortId = 2: price low to high
+    # sortId = 3: price high to low
+    if color == "":
+        if sortId == 0:
+            posts = db.query(models.Post).order_by(models.Post.date.desc()).all()
+        elif sortId == 1:
+            posts = db.query(models.Post).order_by(models.Post.saves.desc()).all()
+        elif sortId == 2:
+            posts = db.query(models.Post).order_by(models.Post.price.asc()).all()
+        elif sortId == 3:
+            posts = db.query(models.Post).order_by(models.Post.price.desc()).all()
+        else:
+            raise HTTPException(status_code=400, detail="Invalid sortId")
+    else:
+
+        if sortId == 0:
+            posts = db.query(models.Post).join(models.PostColor) \
+                .filter(models.Post.id_post == models.PostColor.id_post) \
+                .filter(models.PostColor.color_cod == closest_color(color, db)) \
+                .order_by(models.Post.date.desc()).all()
+        elif sortId == 1:
+            posts = db.query(models.Post).join(models.PostColor) \
+                .filter(models.Post.id_post == models.PostColor.id_post) \
+                .filter(models.PostColor.color_cod == closest_color(color, db)) \
+                .order_by(models.Post.saves.desc()).all()
+        elif sortId == 2:
+            posts = db.query(models.Post).join(models.PostColor) \
+                .filter(models.Post.id_post == models.PostColor.id_post) \
+                .filter(models.PostColor.color_cod == closest_color(color, db)) \
+                .order_by(models.Post.price.asc()).all()
+        elif sortId == 3:
+            posts = db.query(models.Post).join(models.PostColor) \
+                .filter(models.Post.id_post == models.PostColor.id_post) \
+                .filter(models.PostColor.color_cod == closest_color(color, db)) \
+                .order_by(models.Post.price.desc()).all()
+        else:
+            raise HTTPException(status_code=400, detail="Invalid sortId")
+
+    return_posts = []
+    for post in posts:
+        new_post = PostOut(**post.__dict__)
+
+        user = db.query(models.User).filter(models.User.id_user == post.id_user).first()
+        new_post.user = UserOut(**user.__dict__)
+
+        colors = db.query(models.PostColor).filter(models.PostColor.id_post == post.id_post).all()
+        new_post.colors = [color.color_cod for color in colors]
+
+        images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
+        new_post.images = [image.url for image in images]
+
+        # check if the post is liked by the user
+        new_post.saved = db.query(models.Save) \
+                             .filter(models.Save.id_user == user_id) \
+                             .filter(models.Save.id_post == post.id_post) \
+                             .first() is not None
+
+        return_posts.append(new_post)
+
+    return return_posts
+
+
 # ============================ COLOR ============================
+# get all colors from the database
+def getColorTuples(db: Session = Depends(get_db)):
+    colors = db.query(models.Color).all()
+
+    return [(color.red, color.green, color.blue) for color in colors]
+
+
+# return the closest color to the given color
+def closest_color(colorHex: str, db: Session = Depends(get_db)):
+    color = tuple(int(colorHex[i:i + 2], 16) for i in (0, 2, 4))  # convert hex to int
+
+    colors = np.array(getColorTuples(db))
+    color = np.array(color)
+    distances = np.sqrt(np.sum((colors - color) ** 2, axis=1))
+    index_of_smallest = np.where(distances == np.amin(distances))
+    smallest_distance = colors[index_of_smallest]
+    r, g, b = smallest_distance[0]
+
+    return ('#%02x%02x%02x' % (r, g, b)).upper()  # convert int to hex
+
 
 # get all colors
 @app.get("/api/colors", response_model=list[ColorOut])

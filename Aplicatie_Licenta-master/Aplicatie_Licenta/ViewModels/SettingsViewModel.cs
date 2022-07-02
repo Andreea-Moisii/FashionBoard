@@ -1,9 +1,4 @@
 ﻿using Aplicatie_Licenta.Stores;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.ViewModels
 {
@@ -17,5 +12,5 @@ namespace Aplicatie_Licenta.ViewModels
             _navigationStore = navigationStore;
         }
     }
-    
+
 }

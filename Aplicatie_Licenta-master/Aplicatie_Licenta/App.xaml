@@ -219,16 +219,16 @@
             <!--coonvertor-->
             <convertors:InverseBooleanConvertor x:Key="cInverseBoolToVisibility" />
             <BooleanToVisibilityConverter x:Key="cBoolToVisibility" />
+            <hc:Boolean2BooleanReConverter x:Key="cBoolToBool" />
             <convertors:ViewModelConvertor x:Key="cViewModelToVisability" />
             <convertors:ViewModelNPConvertor x:Key="cViewModelNPToVisability" />
 
             <!--setting the theme black-->
             <ResourceDictionary.MergedDictionaries>
-                <hc:ThemeResources RequestedTheme="Dark" AccentColor="#0067A0">
-                </hc:ThemeResources> 
+                <hc:ThemeResources RequestedTheme="Dark" AccentColor="#0067A0"/>
                 <hc:Theme/> 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
-    
+
 </Application>

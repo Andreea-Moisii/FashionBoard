@@ -13,7 +13,7 @@ namespace Aplicatie_Licenta.Service
         public static async Task<IEnumerable<ColorCode>> GetAllColors()
         {
             using HttpClient client = new();
-            var request = await client.GetAsync("http://localhost:8000/api/login");
+            var request = await client.GetAsync("http://localhost:8000/api/colors");
             var response = await request.Content.ReadAsStringAsync();
 
             var colors = JsonConvert.DeserializeObject<IEnumerable<ColorOut>>(response);

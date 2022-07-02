@@ -5,27 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:Aplicatie_Licenta.Views"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1085">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="81"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
 
-        <!-- filtre -->
-        <Grid 
+    <hc:SimplePanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="81"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+
+            <!-- filtre -->
+            <Grid 
             Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="4*"/>
-            </Grid.ColumnDefinitions>
-            
-            
-            <!--button fiter-->
-            <Button 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <!--button fiter-->
+                <ToggleButton  
                 Grid.Column="0"
                 Name="filterButton"
                 Background="Transparent"
@@ -34,56 +37,36 @@
                 Padding="0"
                 Width="auto"
                 Height="45"
-                HorizontalAlignment="Right"
-                Margin="0,0,20,0">
-                <StackPanel Orientation="Horizontal">
-                    <Image 
+                IsChecked="{Binding IsOpen,ElementName=DrawerBottom}"
+                IsEnabled="{Binding IsLoading, Converter={StaticResource cBoolToBool}}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image 
                         Source="icons/equalizer.png" 
                         Width="30" 
                         Height="30"
                         Margin="5"/>
-                    <TextBlock 
+                        <TextBlock 
                         Text="Filters" 
                         FontSize="15"
                         FontWeight="Bold"
                         
                         VerticalAlignment="Center"
                         Margin="5"/>
-                </StackPanel>
-            </Button>
+                    </StackPanel>
+                </ToggleButton>
+            </Grid>
 
-            <!--button sortare-->
-            <hc:ComboBox 
-                Grid.Column="1"
-                HorizontalAlignment="Left"
-                SelectedIndex="0"
-                Width="200"
-                VerticalAlignment="Center"
-                BorderThickness="0"
-                Background="Transparent" 
-                HorizontalContentAlignment="Center"
-                FontSize="15"
-                FontWeight="Bold" 
-                Foreground="#B1B2B8"
-                Margin="20,0,0,0"
-                >
-                <ComboBoxItem Content="Most Popular"/>
-                <ComboBoxItem Content="Expensive"/>
-                <ComboBoxItem Content="Cheap"/>
-            </hc:ComboBox>
-        </Grid>
-
-        <!-- Statius bara de cautare -->
-        <Grid
+            <!-- Statius bara de cautare -->
+            <Grid
             Grid.Row="0">
-            <Grid.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF0067A0"/>
-                    <GradientStop Color="#001E1E2C" Offset="1"/>
-                </LinearGradientBrush>
-            </Grid.Background>
-            
-            <hc:SearchBar
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF0067A0"/>
+                        <GradientStop Color="#001E1E2C" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+
+                <hc:SearchBar
                 hc:InfoElement.Placeholder="Search here ..."
                 hc:InfoElement.Necessary="True"
                 
@@ -96,34 +79,124 @@
                 Background="#181823"
                 Foreground="#B1B2B8"
                 />
-        </Grid>
+            </Grid>
 
-        <!--loading circle-->
-        <hc:LoadingCircle 
+            <!--loading circle-->
+            <hc:LoadingCircle 
             Visibility="{Binding IsLoading, Converter={StaticResource cBoolToVisibility}}"
             Grid.Row="1"
             Width="50"
             Height="50"/>
-        
-        <!--post pannel-->
-        <hc:TransitioningContentControl
-            Visibility="{Binding IsLoading, Converter={StaticResource cInverseBoolToVisibility}}"
-            Grid.Row="1">
-            <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding ViewablePosts}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <views:PostCard/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
-        </hc:TransitioningContentControl>
 
-    </Grid>
+            <!--post pannel-->
+            <hc:TransitioningContentControl
+                Visibility="{Binding IsLoading, Converter={StaticResource cInverseBoolToVisibility}}"
+                Grid.Row="1">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding ViewablePosts}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <views:PostCard/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Center"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </hc:TransitioningContentControl>
+
+        </Grid>
+
+
+        <hc:Drawer Name="DrawerBottom" 
+                   Dock="Bottom" 
+                   ShowMode="Push"
+                   Closed="DrawerBottom_Closed">
+            <Border Background="#181823"
+                    Height="130" 
+                    BorderThickness="0,0,0,0" 
+                    BorderBrush="{DynamicResource BorderBrush}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Color Filter"
+                           VerticalAlignment="Bottom"
+                           Style="{StaticResource sLabel}"
+                           Grid.Row="0" Grid.Column="0"/>
+                    <Label Content="Sort by"
+                           VerticalAlignment="Bottom"
+                           Style="{StaticResource sLabel}"
+                           Grid.Row="0" Grid.Column="1"/>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                        <Button 
+                            Style="{StaticResource sTransparentButton}"
+                            Background="#1C1C1C"
+                            BorderBrush="#0C5985"
+                            FontWeight="Bold"
+                            FontSize="14"
+                            Foreground="#0C5985"
+                            Padding="10,0,0,0"
+                            Content="Clear"
+                            BorderThickness="1"
+                            Width="80" Height="40"
+                            hc:BorderElement.CornerRadius="25,0,0,25"
+                            Command="{Binding ClearColorCmd}"/>
+                        <Button 
+                            Style="{StaticResource sTransparentButton}"
+                            Background="{Binding Color, FallbackValue='Transparent'}"
+                            BorderThickness="1"
+                            Content="pick color"
+                            Foreground="Gray"
+                            Width="150" Height="40"
+                            Margin="0"
+                            hc:BorderElement.CornerRadius="0,25,25,0"
+                            Command="{Binding SelectColorCmd}"/>
+                    </StackPanel>
+                    
+
+                    <hc:ButtonGroup Margin="30,0,30,0" 
+                                    VerticalAlignment="Center"
+                                    Grid.Column="1" Grid.Row="1">
+                        <RadioButton Height="40" 
+                                     Content="Newest"  
+                                     IsChecked="{Binding NewestCheck}"
+                                     hc:BorderElement.CornerRadius="25,0,0,25"
+                                     FontWeight="Bold"
+                                     Foreground="#B1B2B8"
+                                     Command="{Binding test}"/>
+                        <RadioButton Height="40" 
+                                     Content="Most Popular"
+                                     IsChecked="{Binding PopularCheck}"
+                                     FontWeight="Bold"
+                                     Foreground="#B1B2B8"/>
+                        <RadioButton Height="40" 
+                                     Content="Price Low to High"
+                                     IsChecked="{Binding PriceLHCheck}"
+                                     FontWeight="Bold"
+                                     Foreground="#B1B2B8"/>
+                        <RadioButton Height="40" 
+                                     Content="Price High to Low" 
+                                     IsChecked="{Binding PriceHLCheck}"
+                                     hc:BorderElement.CornerRadius="0,25,25,0"
+                                     FontWeight="Bold"
+                                     Foreground="#B1B2B8"/>
+                    </hc:ButtonGroup>
+                </Grid>
+            </Border>
+        </hc:Drawer>
+    </hc:SimplePanel>
 </UserControl>

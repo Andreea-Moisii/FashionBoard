@@ -25,7 +25,8 @@ namespace Aplicatie_Licenta.CustomComponents
         public string Image
         {
             get { return (string)GetValue(ImageProperty); }
-            set { 
+            set
+            {
                 SetValue(ImageProperty, value);
                 if (value == null || value == "") HasValue = false;
                 else HasValue = true;
@@ -59,7 +60,7 @@ namespace Aplicatie_Licenta.CustomComponents
         public static readonly DependencyProperty CommandProperty =
         DependencyProperty.Register("ImgCommand", typeof(ICommand), typeof(ImageSelector), new UIPropertyMetadata(null));
 
-       
+
 
         public ImageSelector()
         {
@@ -83,7 +84,8 @@ namespace Aplicatie_Licenta.CustomComponents
                     Image = uri.AbsoluteUri;
                     HasValue = true;
 
-                    ImgChangeArgs parameter = new ImgChangeArgs {
+                    ImgChangeArgs parameter = new ImgChangeArgs
+                    {
                         Image = Image,
                         Operation = true
                     };

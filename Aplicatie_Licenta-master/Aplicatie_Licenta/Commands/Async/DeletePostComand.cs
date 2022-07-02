@@ -1,7 +1,5 @@
 ﻿using Aplicatie_Licenta.ViewModels;
 using HandyControl.Controls;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Aplicatie_Licenta.Commands.Async
 {
@@ -15,7 +13,7 @@ namespace Aplicatie_Licenta.Commands.Async
         }
         public override void Execute(object? parameter)
         {
-            
+
             Growl.Ask("Are you sure you whant to delete?", isConfirmed =>
             {
                 if (isConfirmed)

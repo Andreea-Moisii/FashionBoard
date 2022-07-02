@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aplicatie_Licenta.Service.Schemas.Post
+﻿namespace Aplicatie_Licenta.Service.Schemas.Post
 {
     public class PostUpdate
     {

@@ -24,7 +24,7 @@ namespace Aplicatie_Licenta.Commands
             {
                 _postViewModel.Like();
                 await PostService.AddSave(_postViewModel.Id_Post);
-            }                
+            }
         }
     }
 }

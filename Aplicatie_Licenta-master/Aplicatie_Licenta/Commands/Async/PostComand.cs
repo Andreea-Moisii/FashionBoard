@@ -1,10 +1,5 @@
-﻿using Aplicatie_Licenta.Service;
-using Aplicatie_Licenta.Stores;
+﻿using Aplicatie_Licenta.Stores;
 using Aplicatie_Licenta.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.Commands.Async
