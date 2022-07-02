@@ -47,6 +47,9 @@ class PostOut(BaseModel):
     images: list[str] | None = None
     saved: bool | None = False
 
+    def __hash__(self):
+        return self.id_post
+
 
 class PostUpdate(BaseModel):
     price: float

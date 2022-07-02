@@ -1,15 +1,12 @@
+import time
 from datetime import datetime
-from math import sqrt
-
-import numpy as np
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, responses, UploadFile, File, Request
 from sqlalchemy.orm import Session
-
-import models
 from shemas import UserOut, PostOut, PostIn, UserRegister, UserLogin, UserUpdate, PostUpdate, ColorOut
 from database import engine, SessionLocal
-
 from auth import AuthHandler
+import models
+import numpy as np
 
 app = FastAPI()
 
@@ -297,71 +294,59 @@ def delete_post(id_post: int, db: Session = Depends(get_db), user_id: int = Depe
     return "Post deleted"
 
 
+# sortId = 0: sort by date
+# sortId = 1: popular
+# sortId = 2: price low to high
+# sortId = 3: price high to low
 # get posts by filters
 @app.get("/api/filter/posts")
-def get_posts_by_filters(sortId: int = 0, color: str = "", db: Session = Depends(get_db),
+def get_posts_by_filters(sortId: int = 0, color: str = "", word: str = "",
+                         db: Session = Depends(get_db),
                          user_id: int = Depends(auth_handler.auth_wrapper)):
-    # sortId = 0: sort by date
-    # sortId = 1: popular
-    # sortId = 2: price low to high
-    # sortId = 3: price high to low
-    if color == "":
-        if sortId == 0:
-            posts = db.query(models.Post).order_by(models.Post.date.desc()).all()
-        elif sortId == 1:
-            posts = db.query(models.Post).order_by(models.Post.saves.desc()).all()
-        elif sortId == 2:
-            posts = db.query(models.Post).order_by(models.Post.price.asc()).all()
-        elif sortId == 3:
-            posts = db.query(models.Post).order_by(models.Post.price.desc()).all()
-        else:
-            raise HTTPException(status_code=400, detail="Invalid sortId")
-    else:
+    posts = db.query(models.Post, models.User, models.PostColor) \
+        .filter(models.Post.id_user == models.User.id_user) \
+        .filter(models.Post.id_post == models.PostColor.id_post)
+    # search by word
+    if word != "":
+        print("has word")
+        posts = posts.filter(models.Post.description.contains(word)
+                             | models.User.username.contains(word))
+    if color != "":
+        print("has color")
+        posts = posts.filter(models.PostColor.color_cod == closest_color(color, db))
 
-        if sortId == 0:
-            posts = db.query(models.Post).join(models.PostColor) \
-                .filter(models.Post.id_post == models.PostColor.id_post) \
-                .filter(models.PostColor.color_cod == closest_color(color, db)) \
-                .order_by(models.Post.date.desc()).all()
-        elif sortId == 1:
-            posts = db.query(models.Post).join(models.PostColor) \
-                .filter(models.Post.id_post == models.PostColor.id_post) \
-                .filter(models.PostColor.color_cod == closest_color(color, db)) \
-                .order_by(models.Post.saves.desc()).all()
-        elif sortId == 2:
-            posts = db.query(models.Post).join(models.PostColor) \
-                .filter(models.Post.id_post == models.PostColor.id_post) \
-                .filter(models.PostColor.color_cod == closest_color(color, db)) \
-                .order_by(models.Post.price.asc()).all()
-        elif sortId == 3:
-            posts = db.query(models.Post).join(models.PostColor) \
-                .filter(models.Post.id_post == models.PostColor.id_post) \
-                .filter(models.PostColor.color_cod == closest_color(color, db)) \
-                .order_by(models.Post.price.desc()).all()
-        else:
-            raise HTTPException(status_code=400, detail="Invalid sortId")
+    if sortId == 0:
+        posts = posts.order_by(models.Post.date.desc())
+    elif sortId == 1:
+        posts = posts.order_by(models.Post.saves.desc()).all()
+    elif sortId == 2:
+        posts = posts.order_by(models.Post.price.asc()).all()
+    elif sortId == 3:
+        posts = posts.order_by(models.Post.price.desc()).all()
+    else:
+        raise HTTPException(status_code=400, detail="Invalid sortId")
 
     return_posts = []
     for post in posts:
-        new_post = PostOut(**post.__dict__)
+        new_post = PostOut(**post[0].__dict__)
 
-        user = db.query(models.User).filter(models.User.id_user == post.id_user).first()
-        new_post.user = UserOut(**user.__dict__)
+        new_post.user = UserOut(**post[1].__dict__)
 
-        colors = db.query(models.PostColor).filter(models.PostColor.id_post == post.id_post).all()
+        colors = db.query(models.PostColor).filter(models.PostColor.id_post == new_post.id_post).all()
         new_post.colors = [color.color_cod for color in colors]
 
-        images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
+        images = db.query(models.Image).filter(models.Image.id_post == new_post.id_post).all()
         new_post.images = [image.url for image in images]
 
         # check if the post is liked by the user
         new_post.saved = db.query(models.Save) \
                              .filter(models.Save.id_user == user_id) \
-                             .filter(models.Save.id_post == post.id_post) \
+                             .filter(models.Save.id_post == new_post.id_post) \
                              .first() is not None
 
         return_posts.append(new_post)
-
+    # print(len(return_posts))
+    # return list(set(return_posts))
     return return_posts
 
 
@@ -432,7 +417,7 @@ def add_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depends
         .filter(models.Save.id_post == id_post).first()
 
     if save:
-        return "Save already exists"
+        raise HTTPException(status_code=400, detail="Save already exists")
 
     save_model = models.Save()
     save_model.id_user = user_id
@@ -463,3 +448,29 @@ def delete_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depe
 
     db.commit()
     return "Save deleted"
+
+
+# ============================ IMAGES ============================
+# return an image
+@app.get("/api/images/{image_name}")
+def get_image(image_name: str):
+    # return the image from images folder
+    return responses.FileResponse(f"images/{image_name}")
+
+
+@app.post("/api/images")
+def add_image(request: Request, image: UploadFile = File(...), ):
+    # save the image to the images folder
+    if _is_image(image.filename):
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        image_name = f"{timestr}-{image.filename.replace(' ', '-')}"
+        with open(f"images/{image_name}", "wb+") as f:
+            f.write(image.file.read())
+
+        return f"http://{request.url.hostname}:{request.url.port}{request.url.path}/{image_name}"
+    else:
+        raise HTTPException(status_code=400, detail="Invalid image")
+
+
+def _is_image(filename: str) -> bool:
+    return filename.endswith((".jpg", ".jpeg", ".png", ".gif"))

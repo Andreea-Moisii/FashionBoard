@@ -101,14 +101,14 @@
                             </customcomponents:ImageSelector>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                    
+
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
-
                 </ItemsControl>
+                
             </ScrollViewer>
         </hc:TransitioningContentControl>
 
