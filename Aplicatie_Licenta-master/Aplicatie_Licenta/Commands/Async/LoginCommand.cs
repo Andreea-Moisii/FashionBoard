@@ -1,6 +1,7 @@
 ﻿using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.Stores;
 using Aplicatie_Licenta.ViewModels;
+using HandyControl.Controls;
 using System.Threading.Tasks;
 
 namespace Aplicatie_Licenta.Commands.Async
@@ -22,12 +23,16 @@ namespace Aplicatie_Licenta.Commands.Async
             if (!_logInViewModel.CheckLogin()) return;
             await AuthService.Login(_logInViewModel.LoginUsername, _logInViewModel.LoginPassword).ContinueWith(task =>
             {
-                if (task.IsCompleted)
+                if (task.IsCompletedSuccessfully)
                 {
                     if (task.Result)
                         _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
                     else
                         _logInViewModel.ErrorLogin = "Invalid username or password";
+                }
+                else
+                {
+                    MessageBox.Error(task.Exception.Message);
                 }
             });
         }

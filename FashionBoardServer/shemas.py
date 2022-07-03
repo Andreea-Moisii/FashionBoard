@@ -48,7 +48,7 @@ class PostOut(BaseModel):
     saved: bool | None = False
 
     def __hash__(self):
-        return self.id_post
+        return int(self.id_post + self.date.timestamp())
 
 
 class PostUpdate(BaseModel):

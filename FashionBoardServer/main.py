@@ -325,6 +325,7 @@ def delete_post(id_post: int, db: Session = Depends(get_db), user_id: int = Depe
 def get_posts_by_filters(sortId: int = 0, color: str = "", word: str = "",
                          db: Session = Depends(get_db),
                          user_id: int = Depends(auth_handler.auth_wrapper)):
+
     posts = db.query(models.Post, models.User, models.PostColor) \
         .filter(models.Post.id_user == models.User.id_user) \
         .filter(models.Post.id_post == models.PostColor.id_post)

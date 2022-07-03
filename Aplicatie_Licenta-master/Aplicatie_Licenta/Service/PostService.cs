@@ -1,6 +1,7 @@
 ﻿using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Service.Schemas.Post;
 using Aplicatie_Licenta.Service.Schemas.User;
+using ColorThiefDotNet;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Aplicatie_Licenta.Service
 {
@@ -64,10 +66,10 @@ namespace Aplicatie_Licenta.Service
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-            
+
             // remove first letter
-            if (color!= "")
-                color = color.Remove(0,3); // remove first 3 leters: # and 2 letters for transparency
+            if (color != "")
+                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
 
             var link = $"http://localhost:8000/api/filter/posts?sortId={sortId}";
             if (color != "")
@@ -77,7 +79,7 @@ namespace Aplicatie_Licenta.Service
 
             HttpResponseMessage response = await client.GetAsync(link);
             string jsonResponse = await response.Content.ReadAsStringAsync();
-            
+
             var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
             return posts.Select(p => ToPost(p));
         }
@@ -191,17 +193,27 @@ namespace Aplicatie_Licenta.Service
         {
             using var client = new HttpClient();
 
+            var colorThief = new ColorThief();
+            var image = new Bitmap(filePath.Remove(0, 8));
+            var colors = colorThief.GetPalette(image, 3);
+
+            List<string> colorsList = new List<string>();
+            for (int i = 0; i < colors.Count; i++)
+            {
+                colorsList.Add(colors[i].Color.ToHexString());
+            }
+
             var fileName = Path.GetFileName(filePath);
             using var requestContent = new MultipartFormDataContent();
             try
             {
                 filePath = filePath.Remove(0, 8);
                 using var fileStream = File.OpenRead(filePath);
-            
+
                 requestContent.Add(new StreamContent(fileStream), "image", fileName);
                 var response = await client.PostAsync("http://localhost:8000/api/images", requestContent);
 
-                
+
                 return await response.Content.ReadAsStringAsync();
             }
             catch (Exception e)

@@ -13,9 +13,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="150"/>
             <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -66,7 +66,6 @@
                FontSize="25"/>
             <hc:TextBox Grid.Row="1"
                         Margin="20, 5, 20, 10"
-                        TextType="PDouble"
                         Background="#2A2C3E"
                         Text="{Binding Price}"
                         FontSize="18"
