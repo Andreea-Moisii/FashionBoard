@@ -13,8 +13,8 @@ namespace Aplicatie_Licenta.CustomComponents
     {
         public bool HasValue
         {
-            get { return (bool)GetValue(HasValueProperty); }
-            set { SetValue(HasValueProperty, value); }
+            get => (bool)GetValue(HasValueProperty); 
+            set => SetValue(HasValueProperty, value); 
         }
         // Using a DependencyProperty as the backing store for HasValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HasValueProperty =
@@ -24,13 +24,8 @@ namespace Aplicatie_Licenta.CustomComponents
 
         public string Image
         {
-            get { return (string)GetValue(ImageProperty); }
-            set
-            {
-                SetValue(ImageProperty, value);
-                if (value == null || value == "") HasValue = false;
-                else HasValue = true;
-            }
+            get => (string)GetValue(ImageProperty); 
+            set => SetValue(ImageProperty, value);
         }
         // Using a DependencyProperty as the backing store for Image.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ImageProperty =
@@ -42,35 +37,31 @@ namespace Aplicatie_Licenta.CustomComponents
             get => (string)GetValue(FilterProperty);
             set => SetValue(FilterProperty, value);
         }
-        public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
-       "Filter", typeof(string), typeof(ImageSelector), new PropertyMetadata("(.jpg)|*.jpg|(.png)|*.png"));
+        public static readonly DependencyProperty FilterProperty = 
+            DependencyProperty.Register("Filter", typeof(string), typeof(ImageSelector), new PropertyMetadata("(.jpg)|*.jpg|(.png)|*.png"));
 
 
         public ICommand ImgCommand
         {
-            get
-            {
-                return (ICommand)GetValue(CommandProperty);
-            }
-            set
-            {
-                SetValue(CommandProperty, value);
-            }
+            get => (ICommand)GetValue(CommandProperty);
+            set =>  SetValue(CommandProperty, value);
         }
         public static readonly DependencyProperty CommandProperty =
-        DependencyProperty.Register("ImgCommand", typeof(ICommand), typeof(ImageSelector), new UIPropertyMetadata(null));
+            DependencyProperty.Register("ImgCommand", typeof(ICommand), typeof(ImageSelector), new UIPropertyMetadata(null));
 
 
 
         public ImageSelector()
         {
             InitializeComponent();
+            HasValue = false;
+            Image = "";
         }
 
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Image == null || Image == "")
+            if (!HasValue)
             {
                 var dialog = new OpenFileDialog
                 {
@@ -80,9 +71,8 @@ namespace Aplicatie_Licenta.CustomComponents
 
                 if (dialog.ShowDialog() == true)
                 {
-                    var uri = new Uri(dialog.FileName, UriKind.RelativeOrAbsolute);
-                    Image = uri.AbsoluteUri;
-                    HasValue = true;
+                    SetValue(ImageProperty, new Uri(dialog.FileName, UriKind.RelativeOrAbsolute).AbsoluteUri);
+                    SetValue(HasValueProperty, true);
 
                     ImgChangeArgs parameter = new ImgChangeArgs
                     {
@@ -95,12 +85,12 @@ namespace Aplicatie_Licenta.CustomComponents
             else
             {
                 var lst_img = Image;
-                Image = "";
-                HasValue = false;
+                SetValue(ImageProperty, default(Image));
+                SetValue(HasValueProperty, false);
 
                 ImgChangeArgs parameter = new ImgChangeArgs
                 {
-                    Image = Image,
+                    Image = lst_img,
                     Operation = false
                 };
                 ImgCommand.Execute(parameter);

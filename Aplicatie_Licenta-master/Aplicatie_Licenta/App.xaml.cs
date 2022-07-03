@@ -1,4 +1,5 @@
-﻿using Aplicatie_Licenta.Stores;
+﻿using Aplicatie_Licenta.Service;
+using Aplicatie_Licenta.Stores;
 using Aplicatie_Licenta.ViewModels;
 using System.Windows;
 
@@ -11,6 +12,7 @@ namespace Aplicatie_Licenta
     {
         private readonly NavigationStore _navigationStore;
 
+        
         public App()
         {
             _navigationStore = new NavigationStore();

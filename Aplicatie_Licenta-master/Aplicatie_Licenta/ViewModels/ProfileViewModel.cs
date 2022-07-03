@@ -61,33 +61,28 @@ namespace Aplicatie_Licenta.ViewModels
             }
         }
 
-        private bool _newestCheck = true;
+        private bool[] _sortCheck = new bool[4] { true, false, false, false };
         public bool NewestCheck
         {
-            get => _newestCheck;
-            set => _newestCheck = value;
+            get => _sortCheck[0];
+            set => _sortCheck[0] = value;
         }
-
-        public bool _popularCheck = false;
         public bool PopularCheck
         {
-            get => _popularCheck;
-            set => _popularCheck = value;
+            get => _sortCheck[1];
+            set => _sortCheck[1] = value;
         }
-
-        public bool _priceLHCheck = false;
         public bool PriceLHCheck
         {
-            get => _priceLHCheck;
-            set => _priceLHCheck = value;
+            get => _sortCheck[2];
+            set => _sortCheck[2] = value;
         }
-
-        public bool _priceHLCheck = false;
         public bool PriceHLCheck
         {
-            get => _priceHLCheck;
-            set => _priceHLCheck = value;
+            get => _sortCheck[3];
+            set => _sortCheck[3] = value;
         }
+        public string SearchText { get; set; } = "";
 
 
         public ICommand SelectColorCmd { get; }
@@ -135,12 +130,12 @@ namespace Aplicatie_Licenta.ViewModels
         public static ViewModelBase LoadProfileViewModel(string username, NavigationStore navigationStore, ViewModelBase? fromViewModel = null)
         {
             var profileViewModel = new ProfileViewModel(navigationStore, fromViewModel);
-            profileViewModel.LoadProfile(username, navigationStore);
+            profileViewModel.LoadProfile(username);
 
             return profileViewModel;
         }
 
-        public async void LoadProfile(string username, NavigationStore navigation)
+        public async void LoadProfile(string username)
         {
             IsLoading = true;
             _viewablePosts.Clear();
@@ -161,7 +156,9 @@ namespace Aplicatie_Licenta.ViewModels
                     });
             }
 
-            await PostService.GetAllPostsForUser(username).ContinueWith(
+            var color = Color;
+            var sortId = Array.IndexOf(_sortCheck, true);
+            await PostService.GetAllFilteredPostsForUser(username, sortId, color).ContinueWith(
             (task) =>
             {
                 // move to UI thread
@@ -169,7 +166,7 @@ namespace Aplicatie_Licenta.ViewModels
                 {
                     foreach (var post in task.Result)
                     {
-                        _viewablePosts.Add(new PostCardViewModel(navigation, post, this));
+                        _viewablePosts.Add(new PostCardViewModel(_navigationStore, post, this));
                     }
                     IsLoading = false;
                 });

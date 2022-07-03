@@ -3,8 +3,6 @@ using Aplicatie_Licenta.Commands.Async;
 using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.Stores;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -18,21 +16,18 @@ namespace Aplicatie_Licenta.ViewModels
 
         // images added //
         private ObservableCollection<string> _viewableImages;
-        public IEnumerable<string> ViewableImages => _viewableImages;
-        private void Set(ref ObservableCollection<string> viewableImages, IEnumerable<string> value)
+        public ObservableCollection<string> ViewableImages
         {
-            viewableImages.Clear();
-            foreach (var item in value)
-            {
-                viewableImages.Add(item);
-            }
+            set => _viewableImages = value;
+            get => _viewableImages;
         }
+
 
         // the new post greated //
         private Post _post;
         public string Description { get; set; }
         public string Price { get; set; }
-        
+
         public ICommand ImgChangeCmd { get; }
         public ICommand CancelCommand { get; }
         public ICommand PostCommand { get; }
@@ -63,19 +58,11 @@ namespace Aplicatie_Licenta.ViewModels
 
         public void AddImage(string image)
         {
-            //_viewableImages.Remove("");
-            _viewableImages.Insert(0,image);
-            //_viewableImages.Add("");
-
-            OnPropertyChanged(nameof(_viewableImages));
+            _viewableImages.Add(image);
         }
-
         public void RemoveImage(string image)
         {
             _viewableImages.Remove(image);
-
-            OnPropertyChanged(nameof(_viewableImages));
         }
-
     }
 }

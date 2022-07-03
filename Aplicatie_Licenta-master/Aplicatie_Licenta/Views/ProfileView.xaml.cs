@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Aplicatie_Licenta.ViewModels;
+using System.Windows.Controls;
 
 namespace Aplicatie_Licenta.Views
 {
@@ -10,6 +11,12 @@ namespace Aplicatie_Licenta.Views
         public ProfileView()
         {
             InitializeComponent();
+        }
+
+        private void DrawerBottom_Closed(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var context = DataContext as ProfileViewModel;
+            context?.LoadProfile(context.Username);
         }
     }
 }

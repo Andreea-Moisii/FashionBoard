@@ -78,6 +78,8 @@
                 BorderThickness="1.5"
                 Background="#181823"
                 Foreground="#B1B2B8"
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                Command="{Binding SearchCmd}"
                 />
             </Grid>
 

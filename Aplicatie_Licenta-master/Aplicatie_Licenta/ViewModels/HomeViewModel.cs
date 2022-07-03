@@ -67,11 +67,12 @@ namespace Aplicatie_Licenta.ViewModels
             get => _sortCheck[3];
             set => _sortCheck[3] = value;
         }
-
+        public string SearchText { get; set; } = "";
 
 
         public ICommand SelectColorCmd { get;}
         public ICommand ClearColorCmd { get;}
+        public ICommand SearchCmd { get; }
 
         public HomeViewModel(NavigationStore navigationStore)
         {
@@ -102,6 +103,8 @@ namespace Aplicatie_Licenta.ViewModels
                 Color = "";
             });
 
+            SearchCmd = new ExecuteCommand(LoadPosts);
+
             LoadPosts();
         }
 
@@ -118,7 +121,7 @@ namespace Aplicatie_Licenta.ViewModels
             var color = Color;
             var sortId = Array.IndexOf(_sortCheck, true);
 
-            await PostService.GetFiterPosts(sortId, color).ContinueWith(t =>
+            await PostService.GetFiterPosts(sortId, color, SearchText).ContinueWith(t =>
             {
                 if (t.IsFaulted)
                 {

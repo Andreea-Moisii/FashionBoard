@@ -111,7 +111,8 @@
 
         <hc:Drawer Name="DrawerBottom" 
                    Dock="Bottom" 
-                   ShowMode="Push">
+                   ShowMode="Push"
+                   Closed="DrawerBottom_Closed">
             <Border Background="#181823"
                     Height="130" 
                     BorderThickness="0,0,0,0" 
@@ -173,7 +174,8 @@
                                      IsChecked="{Binding NewestCheck}"
                                      hc:BorderElement.CornerRadius="25,0,0,25"
                                      FontWeight="Bold"
-                                     Foreground="#B1B2B8"/>
+                                     Foreground="#B1B2B8"
+                                     Command="{Binding test}"/>
                         <RadioButton Height="40" 
                                      Content="Most Popular"
                                      IsChecked="{Binding PopularCheck}"

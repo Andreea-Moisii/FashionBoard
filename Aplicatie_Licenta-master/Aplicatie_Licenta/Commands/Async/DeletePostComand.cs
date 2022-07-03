@@ -1,5 +1,6 @@
 ﻿using Aplicatie_Licenta.ViewModels;
 using HandyControl.Controls;
+using System.Windows;
 
 namespace Aplicatie_Licenta.Commands.Async
 {
@@ -14,14 +15,16 @@ namespace Aplicatie_Licenta.Commands.Async
         public override void Execute(object? parameter)
         {
 
-            Growl.Ask("Are you sure you whant to delete?", isConfirmed =>
+            var results =HandyControl.Controls.MessageBox.Show("Are you sure you whant to delete this post?", "Delete post", 
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (results == MessageBoxResult.Yes)
             {
-                if (isConfirmed)
-                {
-                    _postViewModelBase.OnDeletePost();
-                }
-                return true;
-            }, "Notff");
+                _postViewModelBase.OnDeletePost();
+            }
+            else
+            {
+                return;
+            }
         }
     }
 }
