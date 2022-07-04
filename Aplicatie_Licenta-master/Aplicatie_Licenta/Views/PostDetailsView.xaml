@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:Aplicatie_Licenta.Views" 
              xmlns:hc="https://handyorg.github.io/handycontrol"
              mc:Ignorable="d" 
-             d:DesignHeight="568" d:DesignWidth="1008">
+             d:DesignHeight="568" d:DesignWidth="1008"
+             x:Name="postDetailsV">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"/>
@@ -203,10 +204,13 @@
             ItemsSource="{Binding Colors}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border 
+                    <Button 
                         Width="60" Height="25"
                         Margin="5"
-                        CornerRadius="15"
+                        hc:BorderElement.CornerRadius="15"
+                        BorderThickness="0"
+                        Command="{Binding DataContext.SearchColorCmd , ElementName='postDetailsV'}"
+                        CommandParameter="{Binding}"
                         Background="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

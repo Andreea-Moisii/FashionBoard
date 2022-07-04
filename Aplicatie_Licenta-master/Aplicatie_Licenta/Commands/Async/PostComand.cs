@@ -25,8 +25,24 @@ namespace Aplicatie_Licenta.Commands.Async
         {
             try
             {
-                _model.IsLoading = true;
+                if (_model.ViewableImages.Count <= 1)
+                {
+                    Growl.Info("Add at least on image", "Notff");
+                    return;
+                }
+                if (_model.Description == "")
+                {
+                    Growl.Info("Add a description", "Notff");
+                    return;
+                }
+                if (_model.Price == "")
+                {
+                    Growl.Info("Add a price", "Notff");
+                    return;
+                }
 
+
+                _model.IsLoading = true;
                 var images = new List<string>(_model.ViewableImages);
                 images.Remove("");
                 foreach (string imgeUrl in images)
@@ -41,18 +57,19 @@ namespace Aplicatie_Licenta.Commands.Async
                 {
                     if (t.IsFaulted)
                     {
-                        MessageBox.Error("Error creating post");
+                        Growl.Error("Error creating post", "Notff");
                     }
                     else
                     {
                         _navigationStore.CurrentViewModel = new HomeViewModel(_navigationStore);
+                        Growl.Success("New post created", "Notff");
                     }
                     _model.IsLoading = false;
                 });
             }
             catch (System.Exception ex)
             {
-                MessageBox.Warning(ex.Message);
+                Growl.Warning(ex.Message, "Notff");
                 _model.IsLoading = false;
             }
 

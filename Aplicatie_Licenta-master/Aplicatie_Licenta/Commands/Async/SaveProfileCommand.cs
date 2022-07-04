@@ -46,7 +46,7 @@ namespace Aplicatie_Licenta.Commands.Async
             }
             catch (Exception ex)
             {
-                Growl.Error(ex.Message, "Notff");
+                Growl.Fatal(ex.Message, "Notff");
             }
         }
     }

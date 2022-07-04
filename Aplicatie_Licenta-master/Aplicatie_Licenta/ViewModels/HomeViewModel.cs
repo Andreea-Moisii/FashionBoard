@@ -107,7 +107,43 @@ namespace Aplicatie_Licenta.ViewModels
 
             LoadPosts();
         }
-        
+
+        public HomeViewModel(NavigationStore navigationStore, string color)
+        {
+            _navigationStore = navigationStore;
+            _viewablePosts = new ObservableCollection<PostCardViewModel>();
+
+            // filter // 
+            SelectColorCmd = new ExecuteCommand(() =>
+            {
+                var picker = SingleOpenHelper.CreateControl<ColorPicker>();
+                var window = new PopupWindow
+                {
+                    PopupElement = picker,
+                    Title = "Pick a color",
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ShowInTaskbar = true,
+                    AllowsTransparency = true,
+                    WindowStyle = WindowStyle.None
+                };
+                picker.SelectedColorChanged += OnColorChange;
+                picker.Canceled += delegate { window.Close(); };
+                picker.Confirmed += delegate { window.Close(); };
+                window.Show();
+            });
+
+            ClearColorCmd = new ExecuteCommand(() =>
+            {
+                Color = "";
+            });
+
+            SearchCmd = new ExecuteCommand(LoadPosts);
+
+            Color = color;
+            LoadPosts();
+        }
+
+
         public async void LoadPosts()
         {
             IsLoading = true;

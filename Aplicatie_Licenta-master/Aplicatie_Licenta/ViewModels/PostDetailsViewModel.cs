@@ -1,4 +1,5 @@
 ﻿using Aplicatie_Licenta.Commands;
+using Aplicatie_Licenta.Commands.Normal;
 using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Stores;
 using System.Collections.Generic;
@@ -43,6 +44,8 @@ namespace Aplicatie_Licenta.ViewModels
         public ICommand NextImageCommand { get; }
         public ICommand PreviousImageCommand { get; }
         public ICommand ViewProfileCommand { get; }
+        public ICommand SearchColorCmd { get; }
+        
 
 
         public PostDetailsViewModel(NavigationStore navigationStore, Post post, ViewModelBase lastViewModel) : base(post)
@@ -56,6 +59,7 @@ namespace Aplicatie_Licenta.ViewModels
             ViewProfileCommand = new NavigateCommand(
                 () => ProfileViewModel.LoadProfileViewModel(Username, navigationStore, this),
                 navigationStore);
+            SearchColorCmd = new SearchColorPostsCommand(navigationStore);
         }
 
         public void NextImage()

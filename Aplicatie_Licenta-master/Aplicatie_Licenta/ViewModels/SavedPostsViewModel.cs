@@ -131,6 +131,7 @@ namespace Aplicatie_Licenta.ViewModels
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
+                        _viewablePosts.Clear();
                         foreach (var post in task.Result)
                         {
                             _viewablePosts.Add(new PostCardViewModel(_navigationStore, post, this));

@@ -4,9 +4,11 @@ import time
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException, responses, UploadFile, File, Request
 from sqlalchemy.orm import Session
+from sqlalchemy import desc, asc
 from shemas import UserOut, PostOut, PostIn, UserRegister, UserLogin, UserUpdate, PostUpdate, Image
 from database import engine, SessionLocal
 from auth import AuthHandler
+from math import sqrt
 import models
 import numpy as np
 
@@ -160,13 +162,13 @@ def filter_search(search, user_id: int, sortId: int, color: str, word: str,
                                (models.Image.color3 == close_color))
 
     if sortId == 0:
-        search = search.order_by(models.Post.date.desc()).all()
+        search = search.order_by(desc(models.Post.date)).distinct(models.Post.id_post).all()
     elif sortId == 1:
-        search = search.order_by(models.Post.saves.desc()).all()
+        search = search.order_by(models.Post.saves.desc()).distinct(models.Post.id_post).all()
     elif sortId == 2:
-        search = search.order_by(models.Post.price).all()
+        search = search.order_by(models.Post.price).distinct(models.Post.id_post).all()
     elif sortId == 3:
-        search = search.order_by(models.Post.price.desc()).all()
+        search = search.order_by(models.Post.price.desc()).distinct(models.Post.id_post).all()
     else:
         raise HTTPException(status_code=400, detail="Invalid sortId")
 
@@ -180,9 +182,9 @@ def filter_search(search, user_id: int, sortId: int, color: str, word: str,
 
         # check if the post is liked by the users
         new_post.saved = db.query(models.Save) \
-                        .filter(models.Save.id_user == user_id) \
-                        .filter(models.Save.id_post == new_post.id_post) \
-                        .first() is not None
+                             .filter(models.Save.id_user == user_id) \
+                             .filter(models.Save.id_post == new_post.id_post) \
+                             .first() is not None
 
         return_search.append(new_post)
     return return_search
@@ -199,7 +201,7 @@ def get_search(username: str, sortId: int = 0, color: str = "", word: str = "",
 
     return_search = filter_search(search, user_id, sortId, color, word, db)
 
-    return list(set(return_search))
+    return return_search
 
 
 # // ------------------ create a post ------------------ //
@@ -295,7 +297,8 @@ def get_posts_by_filters(sortId: int = 0, color: str = "", word: str = "",
 
     return_search = filter_search(search, user_id, sortId, color, word, db)
 
-    return list(set(return_search))
+    # return list(set(return_search))
+    return return_search
 
 
 # ============================ COLOR ============================
@@ -387,7 +390,7 @@ def get_saves_by_filters(sortId: int = 0, color: str = "", word: str = "",
 
     return_search = filter_search(saves, user_id, sortId, color, word, db)
 
-    return list(set(return_search))
+    return return_search
 
 
 # ============================ IMAGES ============================

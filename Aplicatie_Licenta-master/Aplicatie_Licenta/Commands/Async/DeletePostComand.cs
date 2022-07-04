@@ -1,5 +1,6 @@
 ﻿using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.ViewModels;
+using HandyControl.Controls;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -28,11 +29,14 @@ namespace Aplicatie_Licenta.Commands.Async
                         App.Current.Dispatcher.Invoke(() =>
                         {
                             _postViewModelBase.PostDeleted();
+                            Growl.Success("Deleted Post succesfuly", "Notff");
+
                         });
                     }
                     else
                     {
-                        HandyControl.Controls.MessageBox.Error("Something went wrong");
+                        Growl.Error("Something went wrong", "Notff");
+                        
                     }
                 });
             }
