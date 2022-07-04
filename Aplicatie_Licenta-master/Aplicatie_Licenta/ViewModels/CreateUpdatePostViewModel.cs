@@ -1,10 +1,8 @@
 ﻿using Aplicatie_Licenta.Commands;
 using Aplicatie_Licenta.Commands.Async;
 using Aplicatie_Licenta.Models;
-using Aplicatie_Licenta.Service;
 using Aplicatie_Licenta.Stores;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace Aplicatie_Licenta.ViewModels
@@ -25,8 +23,20 @@ namespace Aplicatie_Licenta.ViewModels
 
         // the new post greated //
         private Post _post;
-        public string Description { get; set; }
-        public string Price { get; set; }
+        public string Description { get; set; } = "";
+        public string Price { get; set; } = "";
+
+        // loading bar //
+        private bool _isLoading = false;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged(nameof(IsLoading));
+            }
+        }
 
         public ICommand ImgChangeCmd { get; }
         public ICommand CancelCommand { get; }
@@ -40,19 +50,7 @@ namespace Aplicatie_Licenta.ViewModels
             _viewableImages.Add("");
             ImgChangeCmd = new ImageChangeCommand(this);
             CancelCommand = new NavigateCommand(() => new HomeViewModel(navigationStore), navigationStore);
-            PostCommand = new PostComand(navigationStore, this);
-        }
-
-
-        public async void CreatePost()
-        {
-            // need red
-            _viewableImages.Remove("");
-            _post.Images = _viewableImages.ToArray();
-            _post.Description = Description;
-            _post.Price = float.Parse(Price);
-
-            await PostService.CreatePost(_post);
+            PostCommand = new PostComand(navigationStore, this, post);
         }
 
 

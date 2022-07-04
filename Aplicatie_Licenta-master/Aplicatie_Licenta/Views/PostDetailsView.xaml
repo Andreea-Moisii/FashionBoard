@@ -107,6 +107,7 @@
                     CornerRadius="25">
                     <Border.Background>
                         <ImageBrush 
+                            Stretch="UniformToFill"
                             ImageSource="{Binding ProfilePictureUrl, FallbackValue='https://data.whicdn.com/images/353151432/original.jpg'}"/>
                     </Border.Background>
                 </Border>
@@ -127,9 +128,10 @@
                     />
             </StackPanel>
 
+            <!--// post details //-->
             <Border 
                 Grid.Row="1" 
-                CornerRadius="10"
+                CornerRadius="30"
                 Margin="15"
                 Background="Transparent">
                 <TextBlock
@@ -139,6 +141,7 @@
                     TextWrapping="WrapWithOverflow"
                     FontSize="15"
                     FontWeight="Bold"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                     
                     Padding="12"
                     Text="{Binding Details , FallbackValue='---- ʕ•ᴥ• oʔ ---'}"

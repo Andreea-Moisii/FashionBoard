@@ -40,6 +40,7 @@
                     CornerRadius="25">
                     <Border.Background>
                         <ImageBrush 
+                            Stretch="UniformToFill"
                             ImageSource="{Binding ProfilePictureUrl, FallbackValue='https://data.whicdn.com/images/353151432/original.jpg'}"/>
                     </Border.Background>
                 </Border>
@@ -69,8 +70,8 @@
                     </Grid.RowDefinitions>
                     
                     <!--edit button-->
-                    <Button
-                        Grid.Row="0"
+                    <!--<Button
+                        Grid.Row="1"
                         Height="20"
                         HorizontalAlignment="Right"
                         Style="{StaticResource sTransparentButton}"
@@ -79,11 +80,11 @@
                         <Image
                             Stretch="Fill"
                             Source="{StaticResource ic_edit}"/>
-                    </Button>
+                    </Button>-->
 
                     <!--delete button-->
                     <Button
-                        Grid.Row="1"
+                        Grid.Row="0"
                         Height="20"
                         HorizontalAlignment="Right"
                         Style="{StaticResource sTransparentButton}"
@@ -109,7 +110,7 @@
                         Opacity="0.85"
                         Stretch="Fill"
                         ImageSource="{Binding MainImageUrl, FallbackValue='https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg'}"
-                        hc:ImageAttach.SourceFailed='https://t4.ftcdn.net/jpg/04/00/24/31/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3.jpg'/>
+                        />
                 </Border.Background>
             </Border>
 

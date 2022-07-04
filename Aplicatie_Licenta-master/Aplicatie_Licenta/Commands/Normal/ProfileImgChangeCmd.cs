@@ -1,20 +1,25 @@
 ﻿using Aplicatie_Licenta.CustomComponents;
 using Aplicatie_Licenta.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Aplicatie_Licenta.Commands.Async
+namespace Aplicatie_Licenta.Commands.Normal
 {
-    internal class ImageChangeCommand: CommandBase
+    public class ProfileImgChangeCmd:CommandBase
     {
-        private readonly CreateUpdatePostViewModel _viewModel;
+        private readonly SettingsViewModel _viewModel;
 
-        public ImageChangeCommand(CreateUpdatePostViewModel viewModel)
+        public ProfileImgChangeCmd(SettingsViewModel viewModel)
         {
             _viewModel = viewModel;
         }
 
         public override void Execute(object? parameter)
         {
-            
+
             var p = parameter as ImgChangeArgs;
             if (p != null)
             {

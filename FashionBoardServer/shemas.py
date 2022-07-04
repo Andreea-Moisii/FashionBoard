@@ -28,12 +28,19 @@ class UserUpdate(BaseModel):
     image_url: str | None = None
 
 
-# --------------- post ----------------
+# ----------------- Image ----------------
+class Image(BaseModel):
+    url: str | None = ""
+    color1: str | None = ""
+    color2: str | None = ""
+    color3: str | None = ""
+
+
+# --------------- Post ----------------
 class PostIn(BaseModel):
     price: float
     description: str
-    images: list[str]
-    colors: list[str]
+    images: list[Image]
 
 
 class PostOut(BaseModel):
@@ -43,8 +50,7 @@ class PostOut(BaseModel):
     saves: int
     description: str
     date: datetime
-    colors: list[str] | None = None
-    images: list[str] | None = None
+    images: list[Image] | None = None
     saved: bool | None = False
 
     def __hash__(self):
@@ -52,14 +58,8 @@ class PostOut(BaseModel):
 
 
 class PostUpdate(BaseModel):
+    id: int
     price: float
     description: str
-
-
-# ----------------- color ----------------
-
-class ColorOut(BaseModel):
-    code: str
-    red: int
-    green: int
-    blue: int
+    images_add: list[Image]
+    images_remove: list[Image]

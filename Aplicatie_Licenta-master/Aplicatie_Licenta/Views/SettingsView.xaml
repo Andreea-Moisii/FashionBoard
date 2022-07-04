@@ -4,12 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aplicatie_Licenta.Views"
+             xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:customcomponents="clr-namespace:Aplicatie_Licenta.CustomComponents"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             x:Name="settingsView">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         
         <!--// gradient color //-->
@@ -20,8 +26,106 @@
                     <GradientStop Color="#001E1E2C" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
+            <Label Content="Settings"
+                   Style="{StaticResource sLabel}"/>
         </Grid>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    Margin="20,0,10,0">
+            <!--profile picture-->
+            <customcomponents:ImageSelector 
+                Margin="5"
+                Image="{Binding ProfilePictureUrl}"
+                ImgCommand="{Binding ImgChangeCmd}">
+            </customcomponents:ImageSelector>
+
+            <!--// profile name //-->
+            <Label Content="{Binding Username, FallbackValue='Username'}"
+                   Style="{StaticResource sLabel}"
+                   Margin="20"/>
+        </StackPanel>
         
+        <!--// profile description //-->
+        <hc:TextBox
+                FontSize="18"
+                FontWeight="Bold"
+                Grid.Row="2"
+                Margin="10,0,10,0"
+                Background="#2A2C3E"
+                Text="{Binding Description}"
+                AcceptsReturn="True"
+                VerticalContentAlignment="Top"
+                hc:InfoElement.Title="Profile description"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                />
         
+        <!--// profile email //-->
+        <hc:TextBox
+                FontSize="18"
+                FontWeight="Bold"
+                Grid.Row="3"
+                Margin="10,0,10,0"
+                Background="#2A2C3E"
+                Text="{Binding Email}"
+                TextType="Mail"
+                hc:InfoElement.Title="Email"
+                hc:InfoElement.RegexPattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+                />
+
+        <!--// profile buttons //-->
+        <StackPanel
+            HorizontalAlignment="Right"
+            Grid.Row="5" 
+            Orientation="Horizontal"
+            >
+            <!--// delete profile button //-->
+            <Button HorizontalAlignment="Right"
+                    Width="145"
+                    Height="35"
+                    Margin="10,0,10,0"
+                    hc:BorderElement.CornerRadius="15"
+                    BorderBrush="#7FFF6271"
+                    BorderThickness="1"
+                    Foreground="#7FFF6271"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    Padding="0"
+                    Command="{Binding DeleteProfileCmd}"
+                    >
+                Delete profile
+            </Button>
+
+
+            <!--// save button //-->
+            <Button HorizontalAlignment="Right"
+                    Width="100"
+                    Height="35"
+                    Margin="10,0,10,0"
+                    hc:BorderElement.CornerRadius="15"
+                    BorderBrush="#007D58"
+                    Background="#007D58"
+                    BorderThickness="1"
+                    Foreground="Black"
+                    FontSize="15"
+                    FontWeight="Bold"
+                    Padding="0"
+                    Command="{Binding SaveProfileCmd}"
+                    >
+                Save
+            </Button>
+        </StackPanel>
+
+        <hc:SimplePanel
+            Grid.RowSpan="6"
+            Visibility="{Binding IsLoading, Converter={StaticResource cBoolToVisibility}}">
+            <hc:SimplePanel.Background>
+                <SolidColorBrush Color="#FF21364A" Opacity="0.05"/>
+            </hc:SimplePanel.Background>
+            <hc:LoadingCircle 
+                Width="50"
+                Height="50"/>
+        </hc:SimplePanel>
+
     </Grid>
 </UserControl>

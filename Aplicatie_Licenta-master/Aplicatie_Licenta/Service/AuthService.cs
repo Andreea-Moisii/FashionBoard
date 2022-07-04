@@ -12,6 +12,7 @@ namespace Aplicatie_Licenta.Service
         // login token
         public static string? LoginToken { get; set; }
 
+        // --------------------- login --------------------- //
         public static async Task<bool> Login(string username, string password)
         {
             using HttpClient client = new();
@@ -52,6 +53,8 @@ namespace Aplicatie_Licenta.Service
                 return false;
             }
         }
+
+        // --------------------- register a new user --------------------- //
         public static async Task Register(string username, string password, string email)
         {
             using HttpClient client = new();

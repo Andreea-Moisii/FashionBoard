@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aplicatie_Licenta.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Aplicatie_Licenta.Service.Schemas.Post
@@ -7,7 +8,6 @@ namespace Aplicatie_Licenta.Service.Schemas.Post
     {
         public float price { get; set; }
         public string description { get; set; }
-        public IEnumerable<String> images { get; set; }
-        public IEnumerable<String> colors { get; set; }
+        public IEnumerable<Image> images { get; set; }
     }
 }

@@ -1,8 +1,10 @@
+import os
+import pprint
 import time
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException, responses, UploadFile, File, Request
 from sqlalchemy.orm import Session
-from shemas import UserOut, PostOut, PostIn, UserRegister, UserLogin, UserUpdate, PostUpdate, ColorOut
+from shemas import UserOut, PostOut, PostIn, UserRegister, UserLogin, UserUpdate, PostUpdate, Image
 from database import engine, SessionLocal
 from auth import AuthHandler
 import models
@@ -29,16 +31,17 @@ def username_exists(username: str, db: Session = Depends(get_db)):
     return db.query(models.User).filter(models.User.username == username).first() is not None
 
 
-def email_exists(email: str, db: Session = Depends(get_db)):
-    return db.query(models.User).filter(models.User.email == email).first() is not None
+def email_exists(email: str, user_id: int, db: Session = Depends(get_db)):
+    return db.query(models.User).filter((models.User.email == email) &
+                                        (models.User.id_user != user_id)).first() is not None
 
 
-# register user
+# // ------------------ register a new user ------------------ //
 @app.post("/api/register", status_code=201)
 def register(user: UserRegister, db: Session = Depends(get_db)):
     if username_exists(user.username, db):
         raise HTTPException(status_code=400, detail="Username already exists")
-    if email_exists(user.email, db):
+    if email_exists(user.email, -1, db):
         raise HTTPException(status_code=400, detail="Email already exists")
 
     user_model = models.User()
@@ -51,7 +54,7 @@ def register(user: UserRegister, db: Session = Depends(get_db)):
     return "Register successfully"
 
 
-# login user
+# // ------------------ login user ------------------ //
 @app.post("/api/login", status_code=200)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     user_model = db.query(models.User).filter(models.User.username == user.username).first()
@@ -62,21 +65,27 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     return {"token": token}
 
 
-# get a user by username
+# // ------------------ get user data ------------------ //
 @app.get("/api/users/{username}", response_model=UserOut)
 def get_user(username: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.username == username).first()
     return UserOut(**user.__dict__) if user else None
 
 
-# update a user
+# // ------------------ update user data ------------------ //
 @app.put("/api/users")
 def update_user(user: UserUpdate, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
     user_model = db.query(models.User).filter(models.User.id_user == user_id).first()
     if not user_model:
         raise HTTPException(status_code=404, detail="User not found")
-    if user.email and email_exists(user.email, db):
+    if user.email and email_exists(user.email, user_id, db):
         raise HTTPException(status_code=400, detail="Email already exists")
+
+    # delete old profile image if it exists
+    if user.image_url != user_model.image_url and user_model.image_url:
+        path_image = f"images/{user_model.image_url[user_model.image_url.rfind('/') + 1:]}"
+        if os.path.exists(path_image):
+            os.remove(path_image)
 
     update_val = {
         "email": user.email if user.email and user.email != "" else user_model.email,
@@ -89,20 +98,46 @@ def update_user(user: UserUpdate, db: Session = Depends(get_db), user_id: int = 
     return
 
 
-# delete a user
+# // ------------------ delete user ------------------ //
 @app.delete("/api/users")
 def delete_user(db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
     user_model = db.query(models.User).filter(models.User.id_user == user_id).first()
     if not user_model:
         raise HTTPException(status_code=404, detail="User not found")
 
+    # get all posts of the user
+    posts = db.query(models.Post).filter(models.Post.id_user == user_id).all()
+
+    for post in posts:
+        # get all images of the post
+        images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
+        for image in images:
+            # delete image from disk
+            image_path = f"images/{image.url[image.url.rfind('/') + 1:]}"
+            if os.path.exists(image_path):
+                os.remove(image_path)
+            # delete image from database
+            db.query(models.Image).filter(models.Image.id_image == image.id_image).delete()
+
+        # delete saved post from database
+        db.query(models.Post).filter(models.Post.id_post == post.id_post).delete()
+
+        # delete post from database
+        db.query(models.Post).filter(models.Post.id_post == post.id_post).delete()
+
+    # delete user profile image from disk
+    image_path = f"images/{user_model.image_url[user_model.image_url.rfind('/') + 1:]}"
+    if os.path.exists(image_path):
+        os.remove(image_path)
+
+    # delete user from database
     db.query(models.User).filter(models.User.id_user == user_id).delete()
     db.commit()
-    return
+    return "User deleted"
 
 
 # ============================ POST ============================
-
+# // ------------------ get a post for a user ------------------ //
 def get_post_for_user(user_id: int, post_id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id_post == post_id).first()
     if not post:
@@ -112,93 +147,62 @@ def get_post_for_user(user_id: int, post_id: int, db: Session = Depends(get_db))
     return post
 
 
-def filter_search(user_id: int, posts,
-                  sortId: int, color: str, word: str,
+# // ------------------ filter the search results ------------------ //
+def filter_search(search, user_id: int, sortId: int, color: str, word: str,
                   db: Session = Depends(get_db)):
     if word != "":
-        posts = posts.filter(models.Post.description.contains(word)
-                             | models.User.username.contains(word))
+        search = search.filter(models.Post.description.contains(word)
+                               | models.User.username.contains(word))
     if color != "":
-        posts = posts.filter(models.PostColor.color_cod == closest_color(color, db))
+        close_color = closest_color(color, db)
+        search = search.filter((models.Image.color1 == close_color) |
+                               (models.Image.color2 == close_color) |
+                               (models.Image.color3 == close_color))
 
     if sortId == 0:
-        posts = posts.order_by(models.Post.date.desc())
+        search = search.order_by(models.Post.date.desc()).all()
     elif sortId == 1:
-        posts = posts.order_by(models.Post.saves.desc()).all()
+        search = search.order_by(models.Post.saves.desc()).all()
     elif sortId == 2:
-        posts = posts.order_by(models.Post.price.asc()).all()
+        search = search.order_by(models.Post.price).all()
     elif sortId == 3:
-        posts = posts.order_by(models.Post.price.desc()).all()
+        search = search.order_by(models.Post.price.desc()).all()
     else:
         raise HTTPException(status_code=400, detail="Invalid sortId")
 
-    return_posts = []
-    for post in posts:
+    return_search = []
+    for post in search:
         new_post = PostOut(**post[0].__dict__)
-
         new_post.user = UserOut(**post[1].__dict__)
 
-        colors = db.query(models.PostColor).filter(models.PostColor.id_post == new_post.id_post).all()
-        new_post.colors = [color.color_cod for color in colors]
-
         images = db.query(models.Image).filter(models.Image.id_post == new_post.id_post).all()
-        new_post.images = [image.url for image in images]
+        new_post.images = [Image(**image.__dict__) for image in images]
 
-        # check if the post is liked by the user
+        # check if the post is liked by the users
         new_post.saved = db.query(models.Save) \
-                             .filter(models.Save.id_user == user_id) \
-                             .filter(models.Save.id_post == new_post.id_post) \
-                             .first() is not None
+                        .filter(models.Save.id_user == user_id) \
+                        .filter(models.Save.id_post == new_post.id_post) \
+                        .first() is not None
 
-        return_posts.append(new_post)
-    return return_posts
-
-
-# get all posts
-@app.get("/api/posts", response_model=list[PostOut])
-def get_posts(db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    posts = db.query(models.Post).all()
-
-    return_posts = []
-    for post in posts:
-        new_post = PostOut(**post.__dict__)
-
-        user = db.query(models.User).filter(models.User.id_user == post.id_user).first()
-        new_post.user = UserOut(**user.__dict__)
-
-        colors = db.query(models.PostColor).filter(models.PostColor.id_post == post.id_post).all()
-        new_post.colors = [color.color_cod for color in colors]
-
-        images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
-        new_post.images = [image.url for image in images]
-
-        # check if the post is liked by the user
-        new_post.saved = db.query(models.Save) \
-                             .filter(models.Save.id_user == user_id) \
-                             .filter(models.Save.id_post == post.id_post) \
-                             .first() is not None
-
-        return_posts.append(new_post)
-
-    return return_posts
+        return_search.append(new_post)
+    return return_search
 
 
-# get all posts for a user filtered
+# // ------------------ get posts for a user ------------------ //
 @app.get("/api/filter/{username}/posts", response_model=list[PostOut])
-def get_posts(username: str, sortId: int = 0, color: str = "", word: str = "",
-              db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    posts = db.query(models.Post, models.User, models.PostColor) \
+def get_search(username: str, sortId: int = 0, color: str = "", word: str = "",
+               db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
+    search = db.query(models.Post, models.User, models.Image) \
         .filter(models.Post.id_user == models.User.id_user) \
-        .filter(models.Post.id_post == models.PostColor.id_post) \
-        .filter(models.Post.id_post == models.PostColor.id_post) \
+        .filter(models.Post.id_post == models.Image.id_post) \
         .filter(models.User.username == username)
-    # search by word
-    return_posts = filter_search(user_id, posts, sortId, color, word, db)
 
-    return list(set(return_posts))
+    return_search = filter_search(search, user_id, sortId, color, word, db)
+
+    return list(set(return_search))
 
 
-# create a new post
+# // ------------------ create a post ------------------ //
 @app.post("/api/posts")
 def create_post(post: PostIn, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
     post_model = models.Post()
@@ -213,35 +217,40 @@ def create_post(post: PostIn, db: Session = Depends(get_db), user_id: int = Depe
     # put the id in the post
     db.flush()
 
-    # link color to post
-    for color_code in post.colors:
-        post_color_model = models.PostColor()
-        post_color_model.id_post = post_model.id_post
-        post_color_model.color_cod = color_code
-        db.add(post_color_model)
-
-    # create the images for the post
-    for image_url in post.images:
-        image_model = models.Image()
-        image_model.id_post = post_model.id_post
-        image_model.url = image_url
-        db.add(image_model)
+    # add images to the database
+    for image in post.images:
+        post_image = models.Image()
+        post_image.id_post = post_model.id_post
+        post_image.url = image.url
+        post_image.color1 = closest_color(image.color1, db)
+        post_image.color2 = closest_color(image.color2, db)
+        post_image.color3 = closest_color(image.color3, db)
+        db.add(post_image)
 
     db.commit()
     return "Post created"
 
 
-# delete a post
+#  // ------------------ delete a post ------------------ //
 @app.delete("/api/posts/{id_post}")
 def delete_post(id_post: int, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    post_model = get_post_for_user(user_id, id_post, db)
-
+    get_post_for_user(user_id, id_post, db)
+    # delete all images for the post and for the disk
+    images = db.query(models.Image).filter(models.Image.id_post == id_post).all()
+    for image in images:
+        image_path = f"images/{image.url[image.url.rfind('/') + 1:]}"
+        if os.path.exists(image_path):
+            os.remove(image_path)
+        db.query(models.Image).filter(models.Image.id_image == image.id_image).delete()
+    # delete the saves for the post
+    db.query(models.Save).filter(models.Save.id_post == id_post).delete()
+    # delete the post
     db.query(models.Post).filter(models.Post.id_post == id_post).delete()
     db.commit()
     return "Post deleted"
 
 
-# update a post
+# // ------------------ update a post ------------------ //
 @app.put("/api/posts/{id_post}")
 def update_post(id_post: int, post: PostUpdate, db: Session = Depends(get_db),
                 user_id: int = Depends(auth_handler.auth_wrapper)):
@@ -251,88 +260,42 @@ def update_post(id_post: int, post: PostUpdate, db: Session = Depends(get_db),
         "price": post.price if post.price else post_model.price,
         "description": post.description if post.description and post.description != "" else post_model.description
     }
-
     db.query(models.Post).filter(models.Post.id_post == id_post).update(update_val)
+
+    # remove images from the database
+    for image in post.images_remove:
+        db.query(models.Image).filter(models.Image.url == image.url).delete()
+        # delete the image from images folder
+        image_path = f"images/{image.url[image.url.rfind('/') + 1:]}"
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+    # add images to the database
+    for image in post.images_add:
+        post_image = models.Image()
+        post_image.id_post = post_model.id_post
+        post_image.url = image.url
+        post_image.color1 = closest_color(image.color1, db)
+        post_image.color2 = closest_color(image.color2, db)
+        post_image.color3 = closest_color(image.color3, db)
+        db.add(post_image)
+
     db.commit()
     return "Post updated"
 
 
-# update a post's colors
-@app.put("/api/posts/{id_post}/colors")
-def update_post_colors(id_post: int, delete_color: list[str], add_colors: list[str],
-                       db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    # delete colors
-    for color_code in delete_color:
-        db.query(models.PostColor) \
-            .filter(models.PostColor.id_post == id_post) \
-            .filter(models.PostColor.color_cod == color_code) \
-            .delete()
-
-    # add colors
-    for color_code in add_colors:
-        post_color_model = models.PostColor()
-        post_color_model.id_post = id_post
-        post_color_model.color_cod = color_code
-        db.add(post_color_model)
-
-    db.commit()
-    return "Post colors updated"
-
-
-# update a post's images
-@app.put("/api/posts/{id_post}/images")
-def update_post_images(id_post: int, delete_images: list[int], add_images: list[str],
-                       db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    post_model = get_post_for_user(user_id, id_post, db)
-
-    # delete images
-    for image_id in delete_images:
-        db.query(models.Image) \
-            .filter(models.Image.id_post == id_post) \
-            .filter(models.Image.id_image == image_id) \
-            .delete()
-
-    # add images
-    for image_url in add_images:
-        image_model = models.Image()
-        image_model.id_post = id_post
-        image_model.url = image_url
-        db.add(image_model)
-
-    db.commit()
-    return "Post images updated"
-
-
-# delete a post
-@app.delete("/api/posts/{id_post}")
-def delete_post(id_post: int, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
-    post_model = get_post_for_user(user_id, id_post, db)
-
-    # delete the post's colors
-    db.query(models.PostColor).filter(models.PostColor.id_post == id_post).delete()
-
-    # delete the post's images
-    db.query(models.Image).filter(models.Image.id_post == id_post).delete()
-
-    # delete the post
-    db.query(models.Post).filter(models.Post.id_post == id_post).delete()
-    db.commit()
-    return "Post deleted"
-
-
-# get posts by filters
-@app.get("/api/filter/posts")
+# // ------------------ get all posts ------------------ //
+@app.get("/api/filter/posts", response_model=list[PostOut])
 def get_posts_by_filters(sortId: int = 0, color: str = "", word: str = "",
                          db: Session = Depends(get_db),
                          user_id: int = Depends(auth_handler.auth_wrapper)):
-
-    posts = db.query(models.Post, models.User, models.PostColor) \
+    search = db.query(models.Post, models.User, models.Image) \
         .filter(models.Post.id_user == models.User.id_user) \
-        .filter(models.Post.id_post == models.PostColor.id_post)
+        .filter(models.Post.id_post == models.Image.id_post)
 
-    return_posts = filter_search(user_id, posts, sortId, color, word, db)
+    return_search = filter_search(search, user_id, sortId, color, word, db)
 
-    return list(set(return_posts))
+    return list(set(return_search))
 
 
 # ============================ COLOR ============================
@@ -343,9 +306,11 @@ def getColorTuples(db: Session = Depends(get_db)):
     return [(color.red, color.green, color.blue) for color in colors]
 
 
-# return the closest color to the given color
+# return the closest color to the given colors
 def closest_color(colorHex: str, db: Session = Depends(get_db)):
-    color = tuple(int(colorHex[i:i + 2], 16) for i in (0, 2, 4))  # convert hex to int
+    # remove # from hex if it exists
+    colorHex = colorHex.replace("#", "")
+    color = tuple(int(colorHex[i:i + 2], 16) for i in (0, 2, 4))  # convert hex to int values
 
     colors = np.array(getColorTuples(db))
     color = np.array(color)
@@ -357,43 +322,10 @@ def closest_color(colorHex: str, db: Session = Depends(get_db)):
     return ('#%02x%02x%02x' % (r, g, b)).upper()  # convert int to hex
 
 
-# get all colors
-@app.get("/api/colors", response_model=list[ColorOut])
-def get_colors(db: Session = Depends(get_db)):
-    colors = db.query(models.Color).all()
-
-    return [ColorOut(**color.__dict__) for color in colors]
-
-
 # ============================ SAVES ============================
 
-# get all saves
-@app.get("/api/saves", response_model=list[PostOut])
-def get_saves(user_id: int = Depends(auth_handler.auth_wrapper), db: Session = Depends(get_db)):
-    saves = db.query(models.Save).filter(models.Save.id_user == user_id).all()
 
-    return_posts = []
-    for save in saves:
-        post = db.query(models.Post).filter(models.Post.id_post == save.id_post).first()
-        new_post = PostOut(**post.__dict__)
-
-        user = db.query(models.User).filter(models.User.id_user == post.id_user).first()
-        new_post.user = UserOut(**user.__dict__)
-
-        colors = db.query(models.PostColor).filter(models.PostColor.id_post == post.id_post).all()
-        new_post.colors = [color.color_cod for color in colors]
-
-        images = db.query(models.Image).filter(models.Image.id_post == post.id_post).all()
-        new_post.images = [image.url for image in images]
-
-        new_post.saved = True
-
-        return_posts.append(new_post)
-
-    return return_posts
-
-
-# add a save
+# // ------------------ add a save ------------------ //
 @app.post("/api/saves/{id_post}")
 def add_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
     # check if the save exists
@@ -409,7 +341,7 @@ def add_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depends
     save_model.id_post = id_post
     db.add(save_model)
 
-    # update the post's save count
+    # update the post's saved count
     db.query(models.Post) \
         .filter(models.Post.id_post == id_post) \
         .update({"saves": models.Post.saves + 1})
@@ -418,15 +350,22 @@ def add_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depends
     return "Save added"
 
 
-# delete a save
+# // ------------------ delete a save ------------------ //
 @app.delete("/api/saves/{id_post}")
 def delete_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depends(auth_handler.auth_wrapper)):
+    save = db.query(models.Save) \
+               .filter(models.Save.id_user == user_id) \
+               .filter(models.Save.id_post == id_post).first() is not None
+
+    if not save:
+        raise HTTPException(status_code=404, detail="No save found")
+
     db.query(models.Save) \
         .filter(models.Save.id_post == id_post) \
         .filter(models.Save.id_user == user_id) \
         .delete()
 
-    # update the post's save count
+    # update the post's saved count
     db.query(models.Post) \
         .filter(models.Post.id_post == id_post) \
         .update({"saves": models.Post.saves - 1})
@@ -435,31 +374,32 @@ def delete_save(id_post: int, db: Session = Depends(get_db), user_id: int = Depe
     return "Save deleted"
 
 
-# get filtered saves
+# // ------------------ get all saves ------------------ //
 @app.get("/api/filter/saves")
 def get_saves_by_filters(sortId: int = 0, color: str = "", word: str = "",
                          db: Session = Depends(get_db),
                          user_id: int = Depends(auth_handler.auth_wrapper)):
-    saves = db.query(models.Post, models.User, models.PostColor, models.Save) \
-        .filter(models.Save.id_user == models.User.id_user) \
-        .filter(models.Save.id_post == models.Post.id_post) \
-        .filter(models.Post.id_post == models.PostColor.id_post) \
-        .filter(models.Post.id_user == user_id)
+    saves = db.query(models.Post, models.User, models.Image, models.Save) \
+        .filter(models.Post.id_user == models.User.id_user) \
+        .filter(models.Post.id_post == models.Image.id_post) \
+        .filter(models.Post.id_post == models.Save.id_post) \
+        .filter(models.Save.id_user == user_id)
 
-    return_posts = filter_search(user_id, saves, sortId, color, word, db)
+    return_search = filter_search(saves, user_id, sortId, color, word, db)
 
-    return list(set(return_posts))
+    return list(set(return_search))
 
 
 # ============================ IMAGES ============================
-# return an image
+# // ------------------ get a image ------------------ //
 @app.get("/api/images/{image_name}")
 def get_image(image_name: str):
     # return the image from images folder
     return responses.FileResponse(f"images/{image_name}")
 
 
-@app.post("/api/images")
+# // ------------------ add a image ------------------ //
+@app.post("/api/images", response_model=Image)
 def add_image(request: Request, image: UploadFile = File(...), ):
     # save the image to the images folder
     print("here")
@@ -469,7 +409,12 @@ def add_image(request: Request, image: UploadFile = File(...), ):
         with open(f"images/{image_name}", "wb+") as f:
             f.write(image.file.read())
 
-        return f"http://{request.url.hostname}:{request.url.port}{request.url.path}/{image_name}"
+        image = Image()
+        image.url = f'http://{request.url.hostname}:{request.url.port}{request.url.path}/{image_name}'
+        image.color1 = ""
+        image.color2 = ""
+        image.color3 = ""
+        return image
     else:
         raise HTTPException(status_code=400, detail="Invalid image")
 

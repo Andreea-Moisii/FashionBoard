@@ -8,9 +8,11 @@ namespace Aplicatie_Licenta.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
+        // ------- navigation ------- //
         private readonly NavigationStore _navigationStore;
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
+        // ------- navigation commands ------- //
         public ICommand HomeCommand { get; }
         public ICommand ProfileCommand { get; }
         public ICommand SavesCommand { get; }

@@ -22,7 +22,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-
         <Grid Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -71,7 +70,7 @@
                         FontSize="18"
                         FontWeight="Bold"/>
         </Grid>
-        
+
         <!--// description input //-->
         <TextBox
             FontSize="18"
@@ -83,7 +82,7 @@
             AcceptsReturn="True"
             VerticalContentAlignment="Top"
                     />
-        
+
         <!--// images input //-->
         <hc:TransitioningContentControl
             Grid.Column="1"
@@ -107,7 +106,7 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                
+
             </ScrollViewer>
         </hc:TransitioningContentControl>
 
@@ -116,7 +115,7 @@
             Grid.Row="4" Grid.Column="1"
             Orientation="Horizontal"
             >
-             <!--// cancel button //-->
+            <!--// cancel button //-->
             <Button HorizontalAlignment="Right"
                     Width="147"
                     Height="41"
@@ -133,7 +132,7 @@
                 Cancel
             </Button>
 
-            
+
             <!--// post button //-->
             <Button HorizontalAlignment="Right"
                     Width="147"
@@ -151,6 +150,20 @@
                 Post
             </Button>
         </StackPanel>
+
+
+
+        <hc:SimplePanel
+            Grid.RowSpan="5"
+            Grid.ColumnSpan="2"
+            Visibility="{Binding IsLoading, Converter={StaticResource cBoolToVisibility}}">
+            <hc:SimplePanel.Background>
+                <SolidColorBrush Color="#FF21364A" Opacity="0.2"/>
+            </hc:SimplePanel.Background>
+            <hc:LoadingCircle 
+                Width="80"
+                Height="80"/>
+        </hc:SimplePanel>
 
     </Grid>
 </UserControl>

@@ -12,6 +12,7 @@ namespace Aplicatie_Licenta.Service
     {
         public static User? CurrentUser { get; set; }
 
+        // ------------------- delete user acount ------------------- //
         public static async Task DeleteUser()
         {
             using HttpClient client = new();
@@ -21,6 +22,7 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.DeleteAsync("http://localhost:8000/api/users");
         }
 
+        // ------------------- get user info ------------------- //
         public static async Task<User> GetUserByUsername(string username)
         {
             using HttpClient client = new();
@@ -32,6 +34,7 @@ namespace Aplicatie_Licenta.Service
             return ToUser(userOut);
         }
 
+        // ------------------- update user info ------------------- //
         public static async Task UpdateUser(User user)
         {
             using HttpClient client = new();

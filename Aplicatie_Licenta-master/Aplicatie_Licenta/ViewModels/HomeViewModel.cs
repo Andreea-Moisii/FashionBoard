@@ -16,7 +16,7 @@ namespace Aplicatie_Licenta.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
-        public HomeViewModel CurentViewModel => this;
+        public HomeViewModel CurentViewModel => this; // TODO: must see if can be deleted
 
         private readonly ObservableCollection<PostCardViewModel> _viewablePosts;
         public IEnumerable<PostCardViewModel> ViewablePosts => _viewablePosts;
@@ -107,11 +107,6 @@ namespace Aplicatie_Licenta.ViewModels
 
             LoadPosts();
         }
-
-        private void OnColorChange(object? sender, FunctionEventArgs<Color> e)
-        {
-            Color = e.Info.ToString();
-        }
         
         public async void LoadPosts()
         {
@@ -133,12 +128,24 @@ namespace Aplicatie_Licenta.ViewModels
                 {
                     foreach (var post in t.Result)
                     {
-                        _viewablePosts.Add(new PostCardViewModel(_navigationStore, post, this));
+                        var postVM = new PostCardViewModel(_navigationStore, post, this);
+                        postVM.PostDeletedEvent += OnDeletedPost;
+                        _viewablePosts.Add(postVM);
                     }
-
+                    
                     IsLoading = false;
                 });
             });
+        }
+
+        private void OnDeletedPost(PostViewModelBase postViewModel)
+        {
+            _viewablePosts.Remove(postViewModel as PostCardViewModel);
+        }
+
+        private void OnColorChange(object? sender, FunctionEventArgs<Color> e)
+        {
+            Color = e.Info.ToString();
         }
     }
 }

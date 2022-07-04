@@ -1,39 +1,38 @@
 ﻿using Aplicatie_Licenta.Models;
 using Aplicatie_Licenta.Service.Schemas.Post;
 using Aplicatie_Licenta.Service.Schemas.User;
-using ColorThiefDotNet;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Drawing;
+using Image = Aplicatie_Licenta.Models.Image;
 
 namespace Aplicatie_Licenta.Service
 {
     public static class PostService
     {
+        // ---------------- creates a new post ---------------- //
         public static async Task CreatePost(Post post)
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
             // post images // 
-            List<string> images = new();
+            List<Image> images = new();
             foreach (var image in post.Images)
             {
-                images.Add(await UploadImage(image));
+                var img = await ImageService.UploadImage(image.url.Remove(0, 8));
+                images.Add(img);
             }
 
+            // create postIn for server //
             var postIn = new PostIn
             {
                 price = post.Price,
                 description = post.Description,
-                images = images,
-                colors = post.Colors
+                images = images
             };
 
             var json = JsonConvert.SerializeObject(postIn);
@@ -42,6 +41,7 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.PostAsync("http://localhost:8000/api/posts", content);
         }
 
+        // ---------------- delete a post by id ---------------- //
         public static async Task DeletePost(int id)
         {
             using HttpClient client = new();
@@ -50,32 +50,22 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.DeleteAsync($"http://localhost:8000/api/posts/{id}");
         }
 
-        public static async Task<IEnumerable<Post>> GetAllPosts()
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-
-            HttpResponseMessage response = await client.GetAsync("http://localhost:8000/api/posts");
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
-            return posts.Select(p => ToPost(p));
-        }
-
+        // ---------------- get all post (with filters) ---------------- //
         public static async Task<IEnumerable<Post>> GetFiterPosts(int sortId = 0, string color = "", string word = "")
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            // remove first letter
-            if (color != "")
-                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
-
             var link = $"http://localhost:8000/api/filter/posts?sortId={sortId}";
             if (color != "")
+            {
+                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
                 link += $"&color={color}";
+            }
             if (word != "")
+            {
                 link += $"&word={word}";
+            }
 
             HttpResponseMessage response = await client.GetAsync(link);
             string jsonResponse = await response.Content.ReadAsStringAsync();
@@ -84,30 +74,19 @@ namespace Aplicatie_Licenta.Service
             return posts.Select(p => ToPost(p));
         }
 
-        public static async Task<IEnumerable<Post>> GetAllPostsForUser(string Username)
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-
-            HttpResponseMessage response = await client.GetAsync($"http://localhost:8000/api/posts/{Username}");
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
-            return posts.Select(p => ToPost(p));
-        }
-
+        // ---------------- get all posts for user (with filter) ---------------- //
         public static async Task<IEnumerable<Post>> GetAllFilteredPostsForUser(string username, int sortId, string color)
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            // remove first letter
-            if (color != "")
-                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
-
             var link = $"http://localhost:8000/api/filter/{username}/posts?sortId={sortId}";
             if (color != "")
+            {
+                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
                 link += $"&color={color}";
+            }
+            
             HttpResponseMessage response = await client.GetAsync(link);
             string jsonResponse = await response.Content.ReadAsStringAsync();
 
@@ -115,54 +94,33 @@ namespace Aplicatie_Licenta.Service
             return posts.Select(p => ToPost(p));
         }
 
-        public static async Task UpdatePost(Post post)
+        // ---------------- update a post ---------------- //
+        public static async Task UpdatePost(PostUpdate post)
         {
             using HttpClient client = new();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-            var postUpdate = ToPostUpdate(post);
 
-            var json = JsonConvert.SerializeObject(postUpdate);
+            var json = JsonConvert.SerializeObject(post);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{post.Id_post}", content);
+            HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{post.id}", content);
         }
 
-        public static async Task UpdatePostImages(int id_post, IEnumerable<string> postImages)
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            var json = JsonConvert.SerializeObject(postImages);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-
-            HttpResponseMessage response = await client.PutAsync($"http://localhost:8000/api/posts/{id_post}/images", content);
-        }
-
-        public static async Task<IEnumerable<Post>> GetAllSavedPost()
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
-
-            HttpResponseMessage response = await client.GetAsync($"http://localhost:8000/api/saves");
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            var posts = JsonConvert.DeserializeObject<IEnumerable<PostOut>>(jsonResponse);
-            return posts.Select(p => ToPost(p));
-        }
-
+        // ---------------- get all saves (with filters) ---------------- //
         public static async Task<IEnumerable<Post>> GetAllFilteredSavedPost(int sortId = 0, string color = "", string word = "")
         {
             using HttpClient client = new();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            // remove first 3 letter
-            if (color != "")
-                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
-
+   
             var link = $"http://localhost:8000/api/filter/saves?sortId={sortId}";
             if (color != "")
+            {
+                color = color.Remove(0, 3); // remove first 3 leters: # and 2 letters for transparency
                 link += $"&color={color}";
+            }
 
             HttpResponseMessage response = await client.GetAsync(link);
             string jsonResponse = await response.Content.ReadAsStringAsync();
@@ -171,6 +129,7 @@ namespace Aplicatie_Licenta.Service
             return posts.Select(p => ToPost(p));
         }
 
+        // ---------------- add a save ---------------- //
         public static async Task AddSave(int id_post)
         {
             using HttpClient client = new();
@@ -181,6 +140,7 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.PostAsync($"http://localhost:8000/api/saves/{id_post}", content);
         }
 
+        // ---------------- remove a save ---------------- //
         public static async Task DeleteSave(int id_post)
         {
             using HttpClient client = new();
@@ -189,39 +149,7 @@ namespace Aplicatie_Licenta.Service
             HttpResponseMessage response = await client.DeleteAsync($"http://localhost:8000/api/saves/{id_post}");
         }
 
-        public static async Task<string> UploadImage(string filePath)
-        {
-            using var client = new HttpClient();
 
-            var colorThief = new ColorThief();
-            var image = new Bitmap(filePath.Remove(0, 8));
-            var colors = colorThief.GetPalette(image, 3);
-
-            List<string> colorsList = new List<string>();
-            for (int i = 0; i < colors.Count; i++)
-            {
-                colorsList.Add(colors[i].Color.ToHexString());
-            }
-
-            var fileName = Path.GetFileName(filePath);
-            using var requestContent = new MultipartFormDataContent();
-            try
-            {
-                filePath = filePath.Remove(0, 8);
-                using var fileStream = File.OpenRead(filePath);
-
-                requestContent.Add(new StreamContent(fileStream), "image", fileName);
-                var response = await client.PostAsync("http://localhost:8000/api/images", requestContent);
-
-
-                return await response.Content.ReadAsStringAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return "";
-            }
-        }
 
 
         // convertors 
@@ -235,7 +163,6 @@ namespace Aplicatie_Licenta.Service
                 Saves = post.saves,
                 Description = post.description,
                 Date = post.date,
-                Colors = post.colors,
                 Images = post.images,
                 Saved = post.saved
             };
@@ -252,7 +179,13 @@ namespace Aplicatie_Licenta.Service
 
         private static User ToUser(UserOut user)
         {
-            return new User(user.username, user.email, user.description, user.image_url);
+            return new User
+            {
+                Username = user.username,
+                Email = user.email,
+                Description = user.description,
+                ProfileImage = user.image_url
+            };
         }
     }
 }

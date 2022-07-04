@@ -40,22 +40,23 @@
             <!--profile picture-->
             <Border
                 Grid.Row="1" Grid.Column="0"
-                Width="118"
-                Height="118"
-                CornerRadius="60"
+                Width="130"
+                Height="130"
+                CornerRadius="100"
                 >
                 <Border.Background>
                     <ImageBrush 
-                        ImageSource="{Binding ProfilePictureUrl, FallbackValue = 'https://data.whicdn.com/images/353151432/original.jpg'}"/>
+                        ImageSource="{Binding ProfilePictureUrl, FallbackValue = 'https://data.whicdn.com/images/353151432/original.jpg'}"
+                        Stretch="UniformToFill"/>
                 </Border.Background>
             </Border>
 
             <!--profile description-->
             <Grid
-                Grid.Row="1" Grid.Column="1">
+                Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*" />
-                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <!--Username-->
@@ -67,13 +68,23 @@
                     FontSize="40" Width="auto" Height="auto"/>
 
                 <!--Description-->
-                <TextBlock
-                Grid.Row="1"
+                    <Border Grid.Row="1"
+                            Background="#19808080"
+                            CornerRadius="30,0,0,30">
+                        <ScrollViewer >
+                            <TextBlock
+                            Width="Auto" TextWrapping="Wrap"
+                            Padding="30,0,0,0"
+                            FontSize="15"
+                                
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Style="{StaticResource sTextBlock}"
+                            Text="{Binding Description, FallbackValue = 'No description'}"
+                        />
+                        </ScrollViewer>
+                    </Border>
+                   
                 
-                Padding="20"
-                Style="{StaticResource sTextBlock}"
-                Text="{Binding Description, FallbackValue = 'No description'}"
-                />
             </Grid>
 
 

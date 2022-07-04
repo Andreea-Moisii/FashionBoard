@@ -64,7 +64,7 @@
                 </LinearGradientBrush>
             </Grid.Background>
 
-            <hc:SearchBar
+                <hc:SearchBar
                 hc:InfoElement.Placeholder="Search here ..."
                 hc:InfoElement.Necessary="True"
                 
@@ -76,8 +76,10 @@
                 BorderThickness="1.5"
                 Background="#181823"
                 Foreground="#B1B2B8"
+                Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                Command="{Binding SearchCmd}"
                 />
-        </Grid>
+            </Grid>
 
         <!--loadin circle-->
         <hc:LoadingCircle 

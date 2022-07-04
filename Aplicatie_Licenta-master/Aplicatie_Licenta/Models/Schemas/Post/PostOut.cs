@@ -1,4 +1,5 @@
-﻿using Aplicatie_Licenta.Service.Schemas.User;
+﻿using Aplicatie_Licenta.Models;
+using Aplicatie_Licenta.Service.Schemas.User;
 using System;
 using System.Collections.Generic;
 
@@ -12,8 +13,7 @@ namespace Aplicatie_Licenta.Service.Schemas.Post
         public int saves { get; set; }
         public string description { get; set; }
         public DateTime date { get; set; }
-        public IEnumerable<String> colors { get; set; }
-        public IEnumerable<String> images { get; set; }
+        public List<Image> images { get; set; }
         public bool saved { get; set; }
     }
 }

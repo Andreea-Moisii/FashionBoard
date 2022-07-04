@@ -15,13 +15,26 @@ namespace Aplicatie_Licenta.ViewModels
 
 
         // display data
-        public IEnumerable<string> Images => _post.Images;
+        public IEnumerable<Image> Images => _post.Images;
         public string Details => _post.Description;
         public string Price => $"{_post.Price} lei";
-        public IEnumerable<string> Colors => _post.Colors;
+        public IEnumerable<string> Colors
+        {
+            get
+            {
+                var colors = new List<string>();
+                foreach (var image in _post.Images)
+                {
+                    colors.Add(image.color1);
+                    colors.Add(image.color2);
+                    colors.Add(image.color3);
+                }
+                return colors;
+            }
+        }
 
         private int index = 0;
-        public string Image => _post.Images.Skip(index).First();
+        public string Image => _post.Images.Skip(index).First().url;
 
 
         // comands 

@@ -17,6 +17,9 @@ class Image(Base):
     id_image = Column(Integer, primary_key=True, index=True)
     id_post = Column(Integer, ForeignKey("post.id_post"))
     url = Column(String)
+    color1 = Column(String)
+    color2 = Column(String)
+    color3 = Column(String)
 
 
 class Post(Base):
@@ -42,10 +45,3 @@ class Color(Base):
     red = Column(Integer)
     green = Column(Integer)
     blue = Column(Integer)
-
-
-class PostColor(Base):
-    __tablename__ = "post_color"
-    id_post_color = Column(Integer, primary_key=True, index=True)
-    color_cod = Column(String, ForeignKey("color.code"))
-    id_post = Column(Integer, ForeignKey("post.id_post"))

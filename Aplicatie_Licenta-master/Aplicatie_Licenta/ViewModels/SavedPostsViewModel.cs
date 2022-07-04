@@ -73,6 +73,7 @@ namespace Aplicatie_Licenta.ViewModels
 
         public ICommand SelectColorCmd { get; }
         public ICommand ClearColorCmd { get; }
+        public ICommand SearchCmd { get; }
 
 
         public SavedPostsViewModel(NavigationStore navigationStore)
@@ -102,6 +103,8 @@ namespace Aplicatie_Licenta.ViewModels
             {
                 Color = "";
             });
+
+            SearchCmd = new ExecuteCommand(LoadSavedPosts);
         }
 
         private void OnColorChange(object? sender, FunctionEventArgs<Color> e)
@@ -123,7 +126,7 @@ namespace Aplicatie_Licenta.ViewModels
             var color = Color;
             var sortId = Array.IndexOf(_sortCheck, true);
             
-            await PostService.GetAllFilteredSavedPost(sortId, color).ContinueWith(
+            await PostService.GetAllFilteredSavedPost(sortId, color, SearchText).ContinueWith(
                 (task) =>
                 {
                     App.Current.Dispatcher.Invoke((Action)delegate
