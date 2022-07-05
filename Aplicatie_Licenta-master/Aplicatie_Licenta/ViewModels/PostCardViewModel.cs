@@ -13,7 +13,7 @@ namespace Aplicatie_Licenta.ViewModels
         public ICommand ViewMoreCommand { get; }
         public ICommand LikeCommand { get; }
         public ICommand ViewProfileCommand { get; }
-        public ICommand EditCommand { get; }
+        //public ICommand EditCommand { get; }
         public ICommand DeleteComand { get; }
 
         
@@ -25,7 +25,6 @@ namespace Aplicatie_Licenta.ViewModels
                () => ProfileViewModel.LoadProfileViewModel(Username, navigationStore, fromViewModel),
                navigationStore);
 
-            EditCommand = new ExecuteCommand(() => { });
             DeleteComand = new DeletePostComand(this);
         }
 

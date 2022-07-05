@@ -1,14 +1,12 @@
 import os
-import pprint
 import time
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException, responses, UploadFile, File, Request
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, asc
+from sqlalchemy import desc
 from shemas import UserOut, PostOut, PostIn, UserRegister, UserLogin, UserUpdate, PostUpdate, Image
 from database import engine, SessionLocal
 from auth import AuthHandler
-from math import sqrt
 import models
 import numpy as np
 
@@ -182,9 +180,9 @@ def filter_search(search, user_id: int, sortId: int, color: str, word: str,
 
         # check if the post is liked by the users
         new_post.saved = db.query(models.Save) \
-                             .filter(models.Save.id_user == user_id) \
-                             .filter(models.Save.id_post == new_post.id_post) \
-                             .first() is not None
+                           .filter(models.Save.id_user == user_id) \
+                           .filter(models.Save.id_post == new_post.id_post) \
+                           .first() is not None
 
         return_search.append(new_post)
     return return_search
@@ -413,6 +411,7 @@ def add_image(request: Request, image: UploadFile = File(...), ):
             f.write(image.file.read())
 
         image = Image()
+        # noinspection HttpUrlsUsage
         image.url = f'http://{request.url.hostname}:{request.url.port}{request.url.path}/{image_name}'
         image.color1 = ""
         image.color2 = ""
