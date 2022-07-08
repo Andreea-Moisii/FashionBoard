@@ -5,9 +5,9 @@ namespace Aplicatie_Licenta.Commands.Async
 {
     internal class ImageChangeCommand: CommandBase
     {
-        private readonly CreateUpdatePostViewModel _viewModel;
+        private readonly CreatePostViewModel _viewModel;
 
-        public ImageChangeCommand(CreateUpdatePostViewModel viewModel)
+        public ImageChangeCommand(CreatePostViewModel viewModel)
         {
             _viewModel = viewModel;
         }

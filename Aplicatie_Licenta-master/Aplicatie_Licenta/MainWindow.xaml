@@ -125,8 +125,8 @@
                     <views:SettingsView/>
                 </DataTemplate>
 
-                <DataTemplate DataType="{x:Type vms:CreateUpdatePostViewModel}">
-                    <views:CreateUpdatePostView/>
+                <DataTemplate DataType="{x:Type vms:CreatePostViewModel}">
+                    <views:CreatePostView/>
                 </DataTemplate>
             </Grid.Resources>
 

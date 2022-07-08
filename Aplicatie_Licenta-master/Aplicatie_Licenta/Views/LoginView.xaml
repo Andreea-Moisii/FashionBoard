@@ -108,7 +108,7 @@
                 Text="{Binding RegisterUsername}"
                 Style="{StaticResource sInput}"
                 Margin="0,0,0,15"
-             />
+                />
             
             <!--email input-->
             <hc:TextBox

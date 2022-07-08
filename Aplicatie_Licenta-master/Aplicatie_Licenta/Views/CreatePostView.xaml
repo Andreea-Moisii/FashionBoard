@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Aplicatie_Licenta.Views.CreateUpdatePostView"
+﻿<UserControl x:Class="Aplicatie_Licenta.Views.CreatePostView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

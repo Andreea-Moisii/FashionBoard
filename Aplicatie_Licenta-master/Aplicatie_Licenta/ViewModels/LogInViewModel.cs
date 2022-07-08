@@ -6,9 +6,6 @@ namespace Aplicatie_Licenta.ViewModels
 {
     public class LogInViewModel : ViewModelBase
     {
-        private readonly NavigationStore _navigationStore;
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
-
 
         private string? _errorLogin;
         public string? ErrorLogin
@@ -45,8 +42,6 @@ namespace Aplicatie_Licenta.ViewModels
 
         public LogInViewModel(NavigationStore navigationStore)
         {
-            _navigationStore = navigationStore;
-
             LogInCommand = new LoginCommand(this, navigationStore);
             RegisterCommand = new RegisterCommand(this);
         }

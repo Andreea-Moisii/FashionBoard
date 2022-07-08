@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Aplicatie_Licenta.Service.Schemas.Post.PostIn">
+    <Position X="3" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAIAAAAAAAEAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Schemas\Post\PostIn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.Post.PostOut">
+    <Position X="6" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAABAAAAAAEIAAAAAAAGAAAAAAAAAAAAQAAAQA=</HashCode>
+      <FileName>Models\Schemas\Post\PostOut.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.Post.PostUpdate">
+    <Position X="8.5" Y="2.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAIAAQAAAAEAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Models\Schemas\Post\PostUpdate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.User.UserLogin">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\Schemas\User\UserLogin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.User.UserRegister">
+    <Position X="5.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAEAAAAAAIAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\Schemas\User\UserRegister.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.User.UserUpdate">
+    <Position X="7.75" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgIAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\Schemas\User\UserUpdate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Models.Schemas.AuthToken">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Schemas\AuthToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aplicatie_Licenta.Service.Schemas.User.UserOut">
+    <Position X="10" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgIAAAAAEAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\Schemas\User\UserOut.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

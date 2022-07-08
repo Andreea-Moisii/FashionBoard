@@ -10,7 +10,7 @@ namespace Aplicatie_Licenta.Convertors
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is LogInViewModel || value is PostDetailsViewModel || value is SettingsViewModel || value is CreateUpdatePostViewModel)
+            if (value is LogInViewModel || value is PostDetailsViewModel || value is SettingsViewModel || value is CreatePostViewModel)
                 return Visibility.Collapsed;
             else
                 return Visibility.Visible;

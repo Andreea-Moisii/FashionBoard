@@ -7,10 +7,8 @@ using System.Windows.Input;
 
 namespace Aplicatie_Licenta.ViewModels
 {
-    public class CreateUpdatePostViewModel : ViewModelBase
+    public class CreatePostViewModel : ViewModelBase
     {
-        private readonly NavigationStore _navigationStore;
-        public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
 
         // images added //
         private ObservableCollection<string> _viewableImages;
@@ -41,9 +39,8 @@ namespace Aplicatie_Licenta.ViewModels
         public ICommand ImgChangeCmd { get; }
         public ICommand CancelCommand { get; }
         public ICommand PostCommand { get; }
-        public CreateUpdatePostViewModel(NavigationStore navigationStore, Post post)
+        public CreatePostViewModel(NavigationStore navigationStore, Post post)
         {
-            _navigationStore = navigationStore;
             _post = post;
 
             _viewableImages = new ObservableCollection<string>();

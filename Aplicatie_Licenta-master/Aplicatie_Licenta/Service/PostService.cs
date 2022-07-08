@@ -14,32 +14,32 @@ namespace Aplicatie_Licenta.Service
     public static class PostService
     {
         // ---------------- creates a new post ---------------- //
-        public static async Task CreatePost(Post post)
-        {
-            using HttpClient client = new();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
+public static async Task CreatePost(Post post)
+{
+    using HttpClient client = new();
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthService.LoginToken);
 
-            // post images // 
-            List<Image> images = new();
-            foreach (var image in post.Images)
-            {
-                var img = await ImageService.UploadImage(image.url.Remove(0, 8));
-                images.Add(img);
-            }
+    // post images // 
+    List<Image> images = new();
+    foreach (var image in post.Images)
+    {
+        var img = await ImageService.UploadImage(image.url.Remove(0, 8));
+        images.Add(img);
+    }
 
-            // create postIn for server //
-            var postIn = new PostIn
-            {
-                price = post.Price,
-                description = post.Description,
-                images = images
-            };
+    // create postIn for server //
+    var postIn = new PostIn
+    {
+        price = post.Price,
+        description = post.Description,
+        images = images
+    };
 
-            var json = JsonConvert.SerializeObject(postIn);
-            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+    var json = JsonConvert.SerializeObject(postIn);
+    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync("http://localhost:8000/api/posts", content);
-        }
+    HttpResponseMessage response = await client.PostAsync("http://localhost:8000/api/posts", content);
+}
 
         // ---------------- delete a post by id ---------------- //
         public static async Task DeletePost(int id)

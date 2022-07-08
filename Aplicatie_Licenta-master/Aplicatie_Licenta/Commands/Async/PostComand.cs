@@ -11,10 +11,10 @@ namespace Aplicatie_Licenta.Commands.Async
     internal class PostComand : AsyncCommandBase
     {
         private readonly NavigationStore _navigationStore;
-        private readonly CreateUpdatePostViewModel _model;
+        private readonly CreatePostViewModel _model;
         private Post _post;
 
-        public PostComand(NavigationStore navigationStore, CreateUpdatePostViewModel model, Post post)
+        public PostComand(NavigationStore navigationStore, CreatePostViewModel model, Post post)
         {
             _navigationStore = navigationStore;
             _model = model;

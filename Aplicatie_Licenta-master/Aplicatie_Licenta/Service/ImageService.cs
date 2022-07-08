@@ -38,17 +38,17 @@ namespace Aplicatie_Licenta.Service
         }
 
         // -------------------- get the colors from the image ------------- //
-        public static List<string> GetColors(string filePath)
-        {
-            var colorThief = new ColorThief();
-            var image = new Bitmap(filePath);
-            var colors = colorThief.GetPalette(image, 3);
-            List<string> colorsList = new List<string>();
-            for (int i = 0; i < colors.Count; i++)
-            {
-                colorsList.Add(colors[i].Color.ToHexString());
-            }
-            return colorsList;
-        }
+public static List<string> GetColors(string filePath)
+{
+    var colorThief = new ColorThief();
+    var image = new Bitmap(filePath);
+    var colors = colorThief.GetPalette(image, 3);
+    List<string> colorsList = new List<string>();
+    for (int i = 0; i < colors.Count; i++)
+    {
+        colorsList.Add(colors[i].Color.ToHexString());
+    }
+    return colorsList;
+}
     }
 }

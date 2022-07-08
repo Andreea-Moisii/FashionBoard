@@ -307,7 +307,7 @@ def getColorTuples(db: Session = Depends(get_db)):
     return [(color.red, color.green, color.blue) for color in colors]
 
 
-# return the closest color to the given colors
+# return the closest color to the given colors using Euclidian distance
 def closest_color(colorHex: str, db: Session = Depends(get_db)):
     # remove # from hex if it exists
     colorHex = colorHex.replace("#", "")
